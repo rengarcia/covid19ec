@@ -34,20 +34,20 @@ export async function getInitialData() {
     return await response.json();
   }
 
-  try {
-    let offset = "";
-
+  async function* generateEcuadorCities() {
+    let newOffset = "";
     do {
-      await getEcuadorCities(offset).then((response) => {
-        response.records.forEach((record) => ecuadorCities.push(record.fields));
+      const { records, offset } = await getEcuadorCities(newOffset);
+      newOffset = offset;
+      yield records.map(record => record.fields);
+    } while (newOffset);
+  }
 
-        if ("offset" in response) {
-          offset = response.offset;
-        } else {
-          offset = "";
-        }
-      });
-    } while (offset);
+  try {
+
+    for await (const cities of generateEcuadorCities()) {
+      ecuadorCities.push(...cities);
+    }
 
     await getEcuadorData().then(
       (response) => (ecuadorData = response.records[0].fields)
