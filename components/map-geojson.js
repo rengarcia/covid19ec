@@ -69,7 +69,7 @@ function Map({ geoJson }) {
       <MapGL
         {...viewport}
         width="100%"
-        height="100vh"
+        height="calc(100vh - 12.5rem)"
         mapStyle={mapStyle}
         onViewportChange={(newViewport) => setViewport(newViewport)}
         onClick={handleClick}

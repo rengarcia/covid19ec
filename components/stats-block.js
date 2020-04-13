@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { rgba } from "polished";
 
+import formatNumber from "../utils/formatNumber";
+
 const Block = styled.div`
   align-items: center;
   background-color: ${({ theme }) => theme.colors.white};
@@ -53,7 +55,7 @@ function StatsBlock({ icon, label, percentage, value }) {
       {icon}
       <h2>{label}</h2>
       <div>
-        {value && <strong>{new Intl.NumberFormat("es-EC").format(value)}</strong>}
+        {value && <strong>{formatNumber(value)}</strong>}
         {percentage && <span>{percentage}</span>}
       </div>
     </Block>
