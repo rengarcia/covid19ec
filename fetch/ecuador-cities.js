@@ -42,6 +42,10 @@ const createEcuadorCities = async (data) => {
       return acc;
     }, {});
 
+  const confirmed = ecuadorCities
+    .map(({ confirmed }) => confirmed)
+    .reduce((acc, current) => acc + current);
+
   const confirmedByProvince = ecuadorCities.reduce((acc, item) => {
     if (!acc[item.cartodbId]) {
       acc[item.cartodbId] = 0;
@@ -50,15 +54,17 @@ const createEcuadorCities = async (data) => {
     return acc;
   }, {});
 
-  const confirmed = ecuadorCities
-    .map(({ confirmed }) => confirmed)
-    .reduce((acc, current) => acc + current);
+  const confirmedByCity = ecuadorCities.reduce((acc, item) => {
+    acc[item.cantonId] = item.confirmed || 0;
+    return acc;
+  }, {});
 
   return Object.assign({}, data, {
     provinces,
     cities: ecuadorCities,
     confirmed,
     confirmedByProvince,
+    confirmedByCity,
   });
 };
 

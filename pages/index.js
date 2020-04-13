@@ -6,29 +6,23 @@ import Drawer from "../components/drawer";
 import Head from "../components/head";
 import Header from "../components/header";
 import MapGeoJson from "../components/map-geojson";
+import stop from "../utils/stop";
 
 const Container = styled.main`
   height: 100vh;
   position: relative;
 `;
 
-// TODO: move this fn to utils
-function mapStop(confirmed = 0) {
-  if (confirmed <= 10) {
-    return 0;
-  }
-  if (confirmed > 10 && confirmed <= 50) {
-    return 1;
-  }
-  if (confirmed > 50 && confirmed <= 200) {
-    return 2;
-  }
-  if (confirmed > 200 && confirmed <= 700) {
-    return 3;
-  }
-  if (confirmed > 700) {
-    return 4;
-  }
+function updateProvinceFeature(feature, confirmedByProvince) {
+  const confirmed = confirmedByProvince[feature.properties.dpa_provin] || 0;
+  return {
+    ...feature,
+    properties: {
+      ...feature.properties,
+      confirmed,
+      stop: stop(confirmed),
+    },
+  };
 }
 
 function Index({ ecuador, world }) {
@@ -48,13 +42,9 @@ function Index({ ecuador, world }) {
         ),
       geoJson: {
         type: "FeatureCollection",
-        features: geoJson.features.map((feature) => ({
-          ...feature,
-          properties: {
-            ...feature.properties,
-            stop: mapStop(confirmedByProvince[feature.properties.cartodb_id]),
-          },
-        })),
+        features: geoJson.features.map((feature) =>
+          updateProvinceFeature(feature, confirmedByProvince)
+        ),
       },
     },
     world,
@@ -65,7 +55,10 @@ function Index({ ecuador, world }) {
       <Head />
       <Container>
         <Header data={data} />
-        <MapGeoJson geoJson={data.ecuador.geoJson} />
+        <MapGeoJson
+          geoJson={data.ecuador.geoJson}
+          confirmedByCity={data.ecuador.confirmedByCity}
+        />
         <Drawer data={data} />
       </Container>
     </>
