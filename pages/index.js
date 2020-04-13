@@ -54,7 +54,7 @@ function Index({ ecuador, world }) {
     <>
       <Head />
       <Container>
-        <Header data={data} />
+        <Header lastUpdate={data.ecuador.lastUpdate} />
         <MapGeoJson
           geoJson={data.ecuador.geoJson}
           confirmedByCity={data.ecuador.confirmedByCity}
