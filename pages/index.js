@@ -1,30 +1,51 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 
-import { getInitialData } from "../fetch/initial-data";
+import createData from "../fetch/create-data";
 import Drawer from "../components/drawer";
 import Head from "../components/head";
 import Header from "../components/header";
-import Map from "../components/map";
+import MapGeoJson from "../components/map-geojson";
+import stop from "../utils/stop";
 
 const Container = styled.main`
   height: 100vh;
   position: relative;
 `;
 
+function updateProvinceFeature(feature, confirmedByProvince) {
+  const confirmed = confirmedByProvince[feature.properties.dpa_provin] || 0;
+  return {
+    ...feature,
+    properties: {
+      ...feature.properties,
+      confirmed,
+      stop: stop(confirmed),
+    },
+  };
+}
+
 function Index({ ecuador, world }) {
+  const { provinces, confirmedByProvince, geoJson } = ecuador;
+
   const data = {
     ecuador: {
       ...ecuador,
-      provinces: Object.keys(ecuador.provinces)
+      provinces: Object.keys(provinces)
         .sort()
         .reduce(
           (acc, key) => ({
             ...acc,
-            [key]: ecuador.provinces[key],
+            [key]: provinces[key],
           }),
           {}
         ),
+      geoJson: {
+        type: "FeatureCollection",
+        features: geoJson.features.map((feature) =>
+          updateProvinceFeature(feature, confirmedByProvince)
+        ),
+      },
     },
     world,
   };
@@ -33,8 +54,11 @@ function Index({ ecuador, world }) {
     <>
       <Head />
       <Container>
-        <Header data={data} />
-        <Map cities={data.ecuador.cities} />
+        <Header lastUpdate={data.ecuador.lastUpdate} />
+        <MapGeoJson
+          geoJson={data.ecuador.geoJson}
+          confirmedByCity={data.ecuador.confirmedByCity}
+        />
         <Drawer data={data} />
       </Container>
     </>
@@ -42,7 +66,7 @@ function Index({ ecuador, world }) {
 }
 
 Index.getInitialProps = async () => {
-  return getInitialData();
+  return createData();
 };
 
 export default Index;

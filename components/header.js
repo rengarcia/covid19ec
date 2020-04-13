@@ -177,7 +177,7 @@ const InfoTooltip = forwardRef(({ isVisible, updatedAt }, ref) => {
       ref={ref}
       {...(isVisible && { role: "alert" })}
     >
-      <p>Información tomada del COE</p>
+      <p>Información COE Nacional</p>
       <p>Última actualizacion: {updatedAt}</p>
     </Tooltip>
   );
@@ -205,7 +205,7 @@ function LanguageSelector({ isTablet }) {
   );
 }
 
-function AppHeader({ data }) {
+function AppHeader({ lastUpdate }) {
   const [showTooltip, setShowTooltip] = useState(false);
   const isTablet = useMediaQuery(`(min-width: ${TABLET}px)`);
   const tooltipRef = useRef(null);
@@ -246,7 +246,7 @@ function AppHeader({ data }) {
         isVisible={showTooltip}
         ref={tooltipRef}
         updatedAt={format(
-          parseISO(data.ecuador.lastUpdate),
+          parseISO(lastUpdate),
           "yyyy-MM-dd HH:mm"
         )}
       />
