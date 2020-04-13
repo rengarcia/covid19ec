@@ -1,18 +1,13 @@
 import React, { useState } from "react";
-import MapGL, {
-  Source,
-  Layer,
-  WebMercatorViewport,
-  FlyToInterpolator,
-} from "react-map-gl";
+import MapGL, { Source, Layer } from "react-map-gl";
 import styled from "styled-components";
 import getConfig from "next/config";
-import bbox from "@turf/bbox";
 
 import { useGlobalState } from "../state-context";
 import useMediaQuery from "../hooks/use-media-query";
 import useGeoJsonCities from "../hooks/use-geojson-cities";
 import useDataLayer from "../hooks/use-data-layer";
+import useViewport from "../hooks/use-viewport";
 import { TABLET } from "../utils/breakpoints";
 import { SET_SELECTED_PROVINCE } from "../state-context/reducer";
 
@@ -81,7 +76,7 @@ function Tooltip({ data }) {
         <City>{dpa_descan}</City>
         <Confirmed>
           <span>Confirmados</span>
-          <strong>{feature.properties.confirmed}</strong>
+          <strong>{confirmed}</strong>
         </Confirmed>
       </Cases>
     </TooltipContainer>
@@ -106,13 +101,10 @@ function Map({ geoJson, confirmedByCity }) {
     ],
   };
 
-  const [viewport, setViewport] = useState({
-    latitude: -1.5395,
-    longitude: -78.23037,
-    zoom: getZoom(),
-    bearing: 0,
-    pitch: 0,
-  });
+  const [viewport, setViewport] = useViewport(
+    geoJson.features,
+    selectedProvince
+  );
 
   const [hoveredFeature, setHoveredFeature] = useState({
     feature: null,
@@ -125,27 +117,6 @@ function Map({ geoJson, confirmedByCity }) {
       ({ properties }) => properties.dpa_provin && !properties.dpa_canton
     );
     if (feature) {
-      const [minLng, minLat, maxLng, maxLat] = bbox(feature);
-      const wmViewport = new WebMercatorViewport(viewport);
-      const { longitude, latitude, zoom } = wmViewport.fitBounds(
-        [
-          [minLng, minLat],
-          [maxLng, maxLat],
-        ],
-        {
-          padding: 50,
-        }
-      );
-
-      setViewport({
-        ...viewport,
-        longitude,
-        latitude,
-        zoom,
-        transitionInterpolator: new FlyToInterpolator({ speed: 1.2 }),
-        transitionDuration: "auto",
-      });
-
       dispatch({
         type: SET_SELECTED_PROVINCE,
         payload: feature.properties.dpa_provin,

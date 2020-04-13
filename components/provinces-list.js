@@ -5,6 +5,8 @@ import Search from "./search";
 import useDebouncedQuery from "../hooks/use-debounced-query";
 import useProvincesSearch from "../hooks/use-provinces-search";
 import formatNumber from "../utils/formatNumber";
+import { useGlobalState } from "../state-context";
+import { SET_SELECTED_PROVINCE } from "../state-context/reducer";
 
 const ProvinceButton = styled.button`
   appearance: none;
@@ -49,16 +51,21 @@ const NoResults = styled.p`
 `;
 
 function Province({ cities, name }) {
+  const [_, dispatch] = useGlobalState();
+  const cartodbId = cities[0].cartodbId;
   const confirmedByProvince = cities
     .map(({ confirmed }) => confirmed)
     .reduce((acc, current) => acc + current, 0);
 
+  const handleClick = () => {
+    dispatch({ type: SET_SELECTED_PROVINCE, payload: cartodbId });
+    document.documentElement.scrollTop = 0;
+  };
+
   return (
-    <ProvinceButton onClick={() => {}}>
+    <ProvinceButton onClick={handleClick}>
       <strong>{name}</strong>
-      <strong>
-        {formatNumber(confirmedByProvince)}
-      </strong>
+      <strong>{formatNumber(confirmedByProvince)}</strong>
     </ProvinceButton>
   );
 }
