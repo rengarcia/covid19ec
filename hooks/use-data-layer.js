@@ -37,17 +37,19 @@ function createFillDataLayer(isProvinceActive) {
         property: "stop",
         stops: [
           // provinces
-          [0, isProvinceActive ? "#f7f7f7" : "#fed7d7"],
-          [1, isProvinceActive ? "#f7f7f7" : "#feb2b2"],
-          [2, isProvinceActive ? "#f7f7f7" : "#fc8181"],
-          [3, isProvinceActive ? "#f7f7f7" : "#f56565"],
-          [4, isProvinceActive ? "#f7f7f7" : "#e53e3e"],
+          [0, isProvinceActive ? "#f7f7f7" : "#ffffff"],
+          [1, isProvinceActive ? "#f7f7f7" : "#fed7d7"],
+          [2, isProvinceActive ? "#f7f7f7" : "#feb2b2"],
+          [3, isProvinceActive ? "#f7f7f7" : "#fc8181"],
+          [4, isProvinceActive ? "#f7f7f7" : "#f56565"],
+          [5, isProvinceActive ? "#f7f7f7" : "#e53e3e"],
           // cities
-          [10, "#fed7d7"],
-          [11, "#feb2b2"],
-          [12, "#fc8181"],
-          [13, "#f56565"],
-          [14, "#e53e3e"],
+          [10, "#ffffff"],
+          [11, "#fed7d7"],
+          [12, "#feb2b2"],
+          [13, "#fc8181"],
+          [14, "#f56565"],
+          [15, "#e53e3e"],
         ],
       },
       "fill-opacity": {
@@ -59,6 +61,7 @@ function createFillDataLayer(isProvinceActive) {
           [2, isProvinceActive ? 0.5 : 0.8],
           [3, isProvinceActive ? 0.5 : 0.8],
           [4, isProvinceActive ? 0.5 : 0.8],
+          [5, isProvinceActive ? 0.5 : 0.8],
           // cities
           [10, 0.8],
           [11, 0.8],
@@ -85,6 +88,7 @@ function createLineDataLayer(isProvinceActive) {
           [2, isProvinceActive ? "#a0aec0" : "#e53e3e"],
           [3, isProvinceActive ? "#a0aec0" : "#e53e3e"],
           [4, isProvinceActive ? "#a0aec0" : "#e53e3e"],
+          [5, isProvinceActive ? "#a0aec0" : "#e53e3e"],
           // cities
           [10, "#e53e3e"],
           [11, "#e53e3e"],
