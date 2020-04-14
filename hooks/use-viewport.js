@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import bbox from "@turf/bbox";
 import { WebMercatorViewport, FlyToInterpolator } from "react-map-gl";
+
 import useMediaQuery from "../hooks/use-media-query";
 import { TABLET } from "../utils/breakpoints";
 
@@ -19,7 +20,7 @@ function useViewport(features, selectedProvince) {
   useEffect(() => {
     const feature = features.find(
       ({ properties }) =>
-        properties.dpa_provin === selectedProvince && !properties.dpa_canton
+        properties.dpa_prov === selectedProvince && !properties.dpa_canton
     );
     if (feature) {
       const [minLng, minLat, maxLng, maxLat] = bbox(feature);

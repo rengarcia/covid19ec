@@ -5,7 +5,6 @@ import {
   FaBiohazard,
   FaSkullCrossbones,
   FaNotesMedical,
-  FaVial,
 } from "react-icons/fa";
 
 import RegionSelector from "./region-selector";
@@ -50,11 +49,11 @@ const Separator = styled.hr`
 
 function Drawer({ data }) {
   const [{ selectedDataset }] = useGlobalState();
-  const { confirmed, deaths, labSamples, recovered } = data[selectedDataset];
+  const { confirmed, deaths, recovered } = data[selectedDataset];
 
   return (
     <DrawerContainer>
-      <RegionSelector />
+      {/* <RegionSelector /> */}
       <section>
         <StatsBlock
           icon={<FaBiohazard aria-hidden="true" />}
@@ -73,13 +72,6 @@ function Drawer({ data }) {
           percentage={`${((recovered * 100) / confirmed).toFixed(2)}%`}
           value={recovered}
         />
-        {selectedDataset === "ecuador" && (
-          <StatsBlock
-            icon={<FaVial aria-hidden="true" />}
-            label="Muestras"
-            value={labSamples}
-          />
-        )}
       </section>
       <Separator aria-orientation="horizontal" role="separator" />
       <section>
