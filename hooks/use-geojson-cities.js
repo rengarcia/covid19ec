@@ -29,7 +29,7 @@ function useGeoJsonCities(provinceId, confirmedByCity) {
   useEffect(() => {
     if (provinceId) {
       async function getCities() {
-        const URL = `${CITIES_URL} where db3_c_provincia = '${provinceId}'`;
+        const URL = `${CITIES_URL} where dpa_prov = '${provinceId}'`;
         const response = await fetch(URL);
         const data = await response.json();
 
