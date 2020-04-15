@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { rgba } from "polished";
 
 import formatNumber from "../utils/formatNumber";
+import { TABLET } from "../utils/breakpoints";
 
 const Block = styled.div`
   align-items: center;
@@ -16,14 +17,6 @@ const Block = styled.div`
   padding-left: 1rem;
   padding-right: 1rem;
   width: 100%;
-
-  :first-of-type {
-    margin-top: 0.875rem;
-  }
-
-  & + & {
-    margin-top: 0.625rem;
-  }
 
   h2 {
     align-items: center;
@@ -46,6 +39,53 @@ const Block = styled.div`
     font-weight: normal;
     margin-left: 0.5rem;
     padding: 0.125rem 0.375rem;
+  }
+
+  @media (max-width: ${TABLET}px) {
+    :first-of-type {
+      margin-top: 0.875rem;
+    }
+
+    & + & {
+      margin-top: 0.625rem;
+    }
+  }
+
+  @media (min-width: ${TABLET}px) {
+    align-content: center;
+    flex-grow: 1;
+    grid-template-columns: 2rem auto;
+    grid-column-gap: 0.25rem;
+    grid-template-rows: 1.25rem 1.75rem;
+    height: 3.5rem;
+    max-width: 15rem;
+    justify-items: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+
+    &:not(:last-of-type) {
+      margin-right: 0.75rem;
+    }
+
+    h2 {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    strong {
+      font-size: 1.5rem;
+    }
+
+    span {
+      font-size: 1.125rem;
+    }
+
+    svg {
+      grid-column: 1 / 2;
+      grid-row: 1 / 3;
+      height: 1.75rem;
+      width: 1.75rem;
+    }
   }
 `;
 

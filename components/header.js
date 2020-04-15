@@ -232,7 +232,7 @@ function AppHeader({ lastUpdate }) {
     <Header>
       <Heading>Covid-19 Ecuador</Heading>
       <Actions>
-        <LanguageSelector isTablet={isTablet} />
+        {/* <LanguageSelector isTablet={isTablet} /> */}
         {!isTablet && (
           <ActionButton onClick={sharePage}>
             <FaShareAlt aria-label="Compartir" size="1.25rem" />

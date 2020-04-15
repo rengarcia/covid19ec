@@ -59,7 +59,10 @@ function Province({ cities, name }) {
 
   const handleClick = () => {
     dispatch({ type: SET_SELECTED_PROVINCE, payload: cartodbId });
-    document.documentElement.scrollTop = 0;
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   return (

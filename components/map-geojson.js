@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MapGL, { Source, Layer } from "react-map-gl";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import getConfig from "next/config";
 
 import { useGlobalState } from "../state-context";
@@ -23,6 +23,19 @@ const MapContainer = styled.div`
     right: 0;
     top: 0;
   }
+
+  @media (min-width: ${TABLET}px) {
+    & > div {
+      margin-top: 8rem;
+      padding-bottom: 8rem;
+    }
+  }
+
+  @media (max-width: ${TABLET}px) {
+    & > div {
+      padding-bottom: 12.5rem;
+    }
+  }
 `;
 
 const TooltipContainer = styled.div`
@@ -31,10 +44,15 @@ const TooltipContainer = styled.div`
   padding: 4px;
   background: rgba(0, 0, 0, 0.8);
   color: #fff;
-  max-width: 300px;
+  max-width: 280px;
   font-size: 10px;
   z-index: 9;
   pointer-events: none;
+  ${({ leftPosition }) =>
+    leftPosition &&
+    css`
+      transform: translateX(-100%);
+    `}
 `;
 
 const Cases = styled.div`
@@ -67,10 +85,29 @@ const Confirmed = styled.h4`
 `;
 
 function Tooltip({ data }) {
+  const [leftPosition, setLeftPosition] = useState(false);
+  const tooltipRef = useRef(null);
   const { feature, x, y } = data;
   const { dpa_despro, dpa_descan, confirmed } = feature.properties;
+
+  useEffect(() => {
+    if (tooltipRef.current) {
+      const { width } = tooltipRef.current.getBoundingClientRect();
+
+      if (width + x > window.innerWidth) {
+        setLeftPosition(true);
+      } else {
+        setLeftPosition(false);
+      }
+    }
+  }, [x]);
+
   return (
-    <TooltipContainer style={{ left: x, top: y }}>
+    <TooltipContainer
+      leftPosition={leftPosition}
+      ref={tooltipRef}
+      style={{ left: x, top: y }}
+    >
       <Cases>
         <Province>{dpa_despro}</Province>
         <City>{dpa_descan}</City>
@@ -91,7 +128,6 @@ function Map({ geoJson, confirmedByCity }) {
   const dataLayer = useDataLayer(isProvinceActive);
 
   const isTablet = useMediaQuery(`(min-width: ${TABLET}px)`);
-  const getZoom = () => (isTablet ? 6 : 5);
 
   const mapData = {
     ...geoJson,
@@ -114,12 +150,12 @@ function Map({ geoJson, confirmedByCity }) {
 
   const handleClick = (event) => {
     const feature = event.features.find(
-      ({ properties }) => properties.dpa_provin && !properties.dpa_canton
+      ({ properties }) => properties.dpa_prov && !properties.dpa_canton
     );
     if (feature) {
       dispatch({
         type: SET_SELECTED_PROVINCE,
-        payload: feature.properties.dpa_provin,
+        payload: feature.properties.dpa_prov,
       });
     }
   };
@@ -130,7 +166,8 @@ function Map({ geoJson, confirmedByCity }) {
       srcEvent: { offsetX, offsetY },
     } = event;
     const feature =
-      features && features.find(({ properties }) => properties.dpa_provin);
+      features && features.find(({ properties }) => properties.dpa_prov);
+
     setHoveredFeature({ feature, x: offsetX, y: offsetY });
   };
 
@@ -139,12 +176,13 @@ function Map({ geoJson, confirmedByCity }) {
       <MapGL
         {...viewport}
         width="100%"
-        height="calc(100vh - 12rem)"
+        height="100vh"
         mapStyle={mapStyle}
         onViewportChange={(newViewport) => setViewport(newViewport)}
         onClick={handleClick}
         onHover={handleHover}
         mapboxApiAccessToken={mapboxToken}
+        key={isTablet}
       >
         <Source type="geojson" data={mapData}>
           <Layer {...dataLayer.fill} />
