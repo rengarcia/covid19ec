@@ -9,7 +9,6 @@ import {
 
 import StatsBlock from "./stats-block";
 import { useGlobalState } from "../state-context";
-import { DESKTOP } from "../utils/breakpoints";
 
 const Container = styled.section`
   background-color: ${({ theme }) => rgba(theme.colors.whitesmoke, 0.8)};
