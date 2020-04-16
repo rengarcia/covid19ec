@@ -32,6 +32,12 @@ const MapContainer = styled.div`
       max-width: calc(100% - 44rem);
     }
   }
+
+  @media (max-width: ${DESKTOP}px) {
+    & > div {
+      padding-bottom: 9.75rem;
+    }
+  }
 `;
 
 const TooltipContainer = styled.div`
