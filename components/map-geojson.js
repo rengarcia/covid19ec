@@ -126,14 +126,16 @@ const ClearProvince = styled.span`
     width: 1.625rem;
   }
 
-  ${({ isHidden }) => isHidden && css`
-    opacity: 0;
-    visibility: hidden;
+  ${({ isHidden }) =>
+    isHidden &&
+    css`
+      opacity: 0;
+      visibility: hidden;
 
-    svg {
-      display: none;
-    }
-  `}
+      svg {
+        display: none;
+      }
+    `}
 `;
 
 function useHoveredFeature(selectedProvince) {

@@ -5,24 +5,24 @@ const removeDiacritics = (string) =>
 
 const normalizeString = (string) => removeDiacritics(string).toLowerCase();
 
-function useProvincesSearch(provinces, query) {
-  const [filteredProvinces, setFilteredProvinces] = useState(provinces);
+function useLocationsSearch(locations, query) {
+  const [filteredLocations, setFilteredLocations] = useState(locations);
 
   useMemo(() => {
-    const matches = Object.keys(provinces)
+    const matches = Object.keys(locations)
       .filter((key) =>
         normalizeString(key).includes(normalizeString(query).trim())
       )
       .reduce((obj, key) => {
-        obj[key] = provinces[key];
+        obj[key] = locations[key];
 
         return obj;
       }, {});
 
-    setFilteredProvinces(matches);
+    setFilteredLocations(matches);
   }, [query]);
 
-  return filteredProvinces;
+  return filteredLocations;
 }
 
-export default useProvincesSearch;
+export default useLocationsSearch;

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import Search from "./search";
 import useDebouncedQuery from "../hooks/use-debounced-query";
-import useProvincesSearch from "../hooks/use-provinces-search";
+import useLocationsSearch from "../hooks/use-locations-search";
 import formatNumber from "../utils/formatNumber";
 import { useGlobalState } from "../state-context";
 import { SET_SELECTED_PROVINCE } from "../state-context/reducer";
@@ -90,7 +90,7 @@ function Provinces({ filteredProvinces }) {
 function ProvincesList({ provinces }) {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebouncedQuery(query);
-  const filteredProvinces = useProvincesSearch(provinces, debouncedQuery);
+  const filteredProvinces = useLocationsSearch(provinces, debouncedQuery);
 
   return (
     <>

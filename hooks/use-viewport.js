@@ -49,7 +49,7 @@ function useViewport(features, selectedProvince) {
         latitude,
         zoom,
       });
-    } else if (!feature && userSelectedFeature) {
+    } else if (userSelectedFeature) {
       setViewport(getInitialViewport(getZoom()));
     }
   }, [features, selectedProvince]);

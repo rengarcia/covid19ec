@@ -16,6 +16,7 @@
     "@turf/center": "^6.0.1",
     "@turf/center-of-mass": "^6.0.1",
     "date-fns": "^2.12.0",
+    "i18next": "^19.4.2",
     "isomorphic-unfetch": "^3.0.0",
     "lodash": "^4.17.15",
     "next": "latest",
@@ -24,6 +25,7 @@
     "polished": "^3.5.1",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
+    "react-i18next": "^11.3.4",
     "react-icons": "^3.9.0",
     "react-map-gl": "^5.2.3",
     "styled-components": "^5.0.0"

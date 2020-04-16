@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 const Label = styled.label`
   display: inline-block;
@@ -33,15 +34,17 @@ const SearchContainer = styled.div`
 `;
 
 function Search({ onChange, value }) {
+  const { t } = useTranslation();
+
   return (
     <>
-      <Label htmlFor="search">Buscar provincias</Label>
+      <Label htmlFor="search">{t("searchProvinces")}</Label>
       <SearchContainer>
         <input
           autoComplete="off"
           id="search"
           maxLength={32}
-          placeholder="Buscar…"
+          placeholder={t("search")}
           onChange={(e) => onChange(e.target.value)}
           type="text"
           value={value}

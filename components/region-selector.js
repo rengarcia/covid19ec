@@ -1,18 +1,11 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import { useTranslation } from "react-i18next";
+
 import { useGlobalState } from "../state-context";
 import { SET_SELECTED_DATASET } from "../state-context/reducer";
 
-const regions = [
-  {
-    label: "🇪🇨 Ecuador",
-    value: "ecuador",
-  },
-  {
-    label: "🌎 Mundo",
-    value: "world",
-  },
-];
+const regions = ["ecuador", "world"];
 
 const Group = styled.div`
   border-radius: 0.5rem;
@@ -48,10 +41,11 @@ const Button = styled.button`
 
 function RegionSelector() {
   const [{ selectedDataset }, dispatch] = useGlobalState();
+  const { t } = useTranslation();
 
   return (
     <Group role="group">
-      {regions.map(({ label, value }) => (
+      {regions.map((value) => (
         <Button
           aria-pressed={selectedDataset === value}
           onClick={() =>
@@ -59,7 +53,7 @@ function RegionSelector() {
           }
           key={value}
         >
-          {label}
+          {t(value)}
         </Button>
       ))}
     </Group>

@@ -4,11 +4,13 @@ import { rgba } from "polished";
 import { FaCaretDown, FaInfoCircle, FaShareAlt } from "react-icons/fa";
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
+import { useTranslation } from "react-i18next";
 
 import { DESKTOP } from "../utils/breakpoints";
 import { useGlobalState } from "../state-context";
 import useClickOutside from "../hooks/use-click-outside";
 import { SET_SELECTED_LANGUAGE } from "../state-context/reducer";
+import i18n from "../i18n";
 
 const languages = [
   {
@@ -169,14 +171,17 @@ const Tooltip = styled.div`
 `;
 
 const InfoTooltip = forwardRef(({ isVisible, updatedAt }, ref) => {
+  const { t } = useTranslation();
+
   return (
     <Tooltip
       isVisible={isVisible}
       ref={ref}
       {...(isVisible && { role: "alert" })}
     >
-      <p>Información COE Nacional</p>
-      <p>Última actualizacion: {updatedAt}</p>
+      <p>
+        {t("lastUpdate")}: {updatedAt}
+      </p>
     </Tooltip>
   );
 });
@@ -187,9 +192,10 @@ function LanguageSelector() {
   return (
     <LanguageSelect>
       <select
-        onChange={(e) =>
-          dispatch({ type: SET_SELECTED_LANGUAGE, payload: e.target.value })
-        }
+        onChange={(e) => {
+          dispatch({ type: SET_SELECTED_LANGUAGE, payload: e.target.value });
+          i18n.changeLanguage(e.target.value);
+        }}
         value={selectedLanguage}
       >
         {languages.map(({ label, value }) => (
@@ -205,7 +211,9 @@ function LanguageSelector() {
 
 function AppHeader({ lastUpdate }) {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [{ selectedLanguage }] = useGlobalState();
   const tooltipRef = useRef(null);
+  const { t } = useTranslation();
 
   useClickOutside(tooltipRef, () => {
     if (showTooltip) {
@@ -217,7 +225,10 @@ function AppHeader({ lastUpdate }) {
     try {
       await navigator.share({
         title: "Covid-19 Ecuador",
-        text: "Información actualizada de los casos de COVID-19 en Ecuador",
+        text:
+          selectedLanguage === "es"
+            ? "Información actualizada de los casos de COVID-19 en Ecuador"
+            : "Updated information on COVID-19 cases in Ecuador",
         url: "https://covid19-ecuador.com",
       });
     } catch (err) {
@@ -231,19 +242,16 @@ function AppHeader({ lastUpdate }) {
       <Actions>
         <LanguageSelector />
         <ActionButton onClick={sharePage}>
-          <FaShareAlt aria-label="Compartir" size="1.25rem" />
+          <FaShareAlt aria-label={t("share")} size="1.25rem" />
         </ActionButton>
         <ActionButton onClick={() => setShowTooltip(!showTooltip)}>
-          <FaInfoCircle aria-label="Información" size="1.25rem" />
+          <FaInfoCircle aria-label={t("moreInfo")} size="1.25rem" />
         </ActionButton>
       </Actions>
       <InfoTooltip
         isVisible={showTooltip}
         ref={tooltipRef}
-        updatedAt={format(
-          parseISO(lastUpdate),
-          "yyyy-MM-dd HH:mm"
-        )}
+        updatedAt={format(parseISO(lastUpdate), "yyyy-MM-dd HH:mm")}
       />
     </Header>
   );

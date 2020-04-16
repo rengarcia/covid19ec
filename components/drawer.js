@@ -7,6 +7,7 @@ import {
   FaNotesMedical,
   FaVial,
 } from "react-icons/fa";
+import { useTranslation } from 'react-i18next';
 
 import RegionSelector from "./region-selector";
 import ProvincesList from "./provinces-list";
@@ -63,6 +64,7 @@ const Separator = styled.hr`
 function Drawer({ data }) {
   const [{ selectedDataset }] = useGlobalState();
   const { confirmed, deaths, labSamples, recovered } = data[selectedDataset];
+  const { t } = useTranslation();
 
   return (
     <DrawerContainer>
@@ -70,25 +72,25 @@ function Drawer({ data }) {
       <section>
         <StatsBlock
           icon={<FaBiohazard aria-hidden="true" />}
-          label="Casos confirmados"
+          label={t('confirmed')}
           value={confirmed}
         />
         <StatsBlock
           icon={<FaSkullCrossbones aria-hidden="true" />}
-          label="Fallecidos"
+          label={t('deaths')}
           percentage={`${((deaths * 100) / confirmed).toFixed(2)}%`}
           value={deaths}
         />
         <StatsBlock
           icon={<FaNotesMedical aria-hidden="true" />}
-          label="Recuperados"
+          label={t('recovered')}
           percentage={`${((recovered * 100) / confirmed).toFixed(2)}%`}
           value={recovered}
         />
         {selectedDataset === "ecuador" && (
           <StatsBlock
             icon={<FaVial aria-hidden="true" />}
-            label="Muestras"
+            label={t('labSamples')}
             value={labSamples}
           />
         )}
