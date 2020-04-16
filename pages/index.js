@@ -6,14 +6,20 @@ import Drawer from "../components/drawer";
 import Head from "../components/head";
 import Header from "../components/header";
 import MapGeoJson from "../components/map-geojson";
-import StatsHeader from "../components/stats-header";
 import stop from "../utils/stop";
-import useMediaQuery from "../hooks/use-media-query";
-import { TABLET } from "../utils/breakpoints";
+import { DESKTOP } from "../utils/breakpoints";
 
 const Container = styled.main`
   height: 100vh;
+  margin-top: 2.75rem;
+  padding-bottom: 2.75rem;
   position: relative;
+
+  @media (min-width: ${DESKTOP}px) {
+    display: grid;
+    grid-template-columns: 22rem auto 22rem;
+    overflow-y: hidden;
+  }
 `;
 
 function updateProvinceFeature(feature, confirmedByProvince) {
@@ -30,7 +36,6 @@ function updateProvinceFeature(feature, confirmedByProvince) {
 }
 
 function Index({ ecuador, world }) {
-  const isTablet = useMediaQuery(`(min-width: ${TABLET}px)`);
   const { provinces, confirmedByProvince, geoJson } = ecuador;
 
   const data = {
@@ -58,14 +63,14 @@ function Index({ ecuador, world }) {
   return (
     <>
       <Head />
+      <Header lastUpdate={data.ecuador.lastUpdate} />
       <Container>
-        <Header lastUpdate={data.ecuador.lastUpdate} />
-        {isTablet && <StatsHeader data={data} />}
+        <Drawer data={data} />
         <MapGeoJson
           geoJson={data.ecuador.geoJson}
           confirmedByCity={data.ecuador.confirmedByCity}
+          provincesKeys={data.ecuador.provincesKey}
         />
-        {!isTablet && <Drawer data={data} />}
       </Container>
     </>
   );

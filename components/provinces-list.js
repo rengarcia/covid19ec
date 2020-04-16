@@ -9,6 +9,7 @@ import { useGlobalState } from "../state-context";
 import { SET_SELECTED_PROVINCE } from "../state-context/reducer";
 
 const ProvinceButton = styled.button`
+  align-items: center;
   appearance: none;
   background-color: ${({ theme }) => theme.colors.white};
   border: 0;
@@ -37,6 +38,7 @@ const ProvinceButton = styled.button`
 
   strong:first-child {
     font-weight: normal;
+    text-align: left;
   }
 
   strong:last-child {

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { rgba } from "polished";
 
 import formatNumber from "../utils/formatNumber";
-import { TABLET } from "../utils/breakpoints";
+import { DESKTOP } from "../utils/breakpoints";
 
 const Block = styled.div`
   align-items: center;
@@ -41,27 +41,25 @@ const Block = styled.div`
     padding: 0.125rem 0.375rem;
   }
 
-  @media (max-width: ${TABLET}px) {
-    :first-of-type {
-      margin-top: 0.875rem;
-    }
-
-    & + & {
-      margin-top: 0.625rem;
-    }
+  :first-of-type {
+    margin-top: 0.875rem;
   }
 
-  @media (min-width: ${TABLET}px) {
+  & + & {
+    margin-top: 0.625rem;
+  }
+
+  @media (min-width: ${DESKTOP}px) {
     align-content: center;
     flex-grow: 1;
-    grid-template-columns: 2rem auto;
+    grid-template-columns: 3rem auto;
     grid-column-gap: 0.25rem;
-    grid-template-rows: 1.25rem 1.75rem;
-    height: 3.5rem;
-    max-width: 15rem;
+    grid-template-rows: auto 1.75rem;
+    height: auto;
     justify-items: center;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding: 0.5rem;
+    text-align: center;
+    width: 100%;
 
     &:not(:last-of-type) {
       margin-right: 0.75rem;

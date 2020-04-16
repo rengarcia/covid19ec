@@ -5,21 +5,18 @@ import { FaCaretDown, FaInfoCircle, FaShareAlt } from "react-icons/fa";
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
 
-import { DESKTOP, TABLET } from "../utils/breakpoints";
+import { DESKTOP } from "../utils/breakpoints";
 import { useGlobalState } from "../state-context";
 import useClickOutside from "../hooks/use-click-outside";
-import useMediaQuery from "../hooks/use-media-query";
 import { SET_SELECTED_LANGUAGE } from "../state-context/reducer";
 
 const languages = [
   {
-    desktopLabel: "🇪🇨 Español",
-    mobileLabel: "🇪🇨 ES",
+    label: "🇪🇨 ES",
     value: "es",
   },
   {
-    desktopLabel: "🇺🇸 English",
-    mobileLabel: "🇺🇸 EN",
+    label: "🇺🇸 EN",
     value: "en",
   },
 ];
@@ -89,7 +86,7 @@ const ActionButton = styled.button`
     }
 
     :first-of-type {
-      margin-left: 1rem;
+      display: none;
     }
   }
 `;
@@ -142,6 +139,7 @@ const Tooltip = styled.div`
   top: 2.75rem;
   right: 0.75rem;
   visibility: hidden;
+  z-index: 314160;
 
   ::after {
     border-style: solid;
@@ -183,7 +181,7 @@ const InfoTooltip = forwardRef(({ isVisible, updatedAt }, ref) => {
   );
 });
 
-function LanguageSelector({ isTablet }) {
+function LanguageSelector() {
   const [{ selectedLanguage }, dispatch] = useGlobalState();
 
   return (
@@ -194,9 +192,9 @@ function LanguageSelector({ isTablet }) {
         }
         value={selectedLanguage}
       >
-        {languages.map(({ desktopLabel, mobileLabel, value }) => (
+        {languages.map(({ label, value }) => (
           <option key={value} value={value}>
-            {isTablet ? desktopLabel : mobileLabel}
+            {label}
           </option>
         ))}
       </select>
@@ -207,7 +205,6 @@ function LanguageSelector({ isTablet }) {
 
 function AppHeader({ lastUpdate }) {
   const [showTooltip, setShowTooltip] = useState(false);
-  const isTablet = useMediaQuery(`(min-width: ${TABLET}px)`);
   const tooltipRef = useRef(null);
 
   useClickOutside(tooltipRef, () => {
@@ -232,12 +229,10 @@ function AppHeader({ lastUpdate }) {
     <Header>
       <Heading>Covid-19 Ecuador</Heading>
       <Actions>
-        {/* <LanguageSelector isTablet={isTablet} /> */}
-        {!isTablet && (
-          <ActionButton onClick={sharePage}>
-            <FaShareAlt aria-label="Compartir" size="1.25rem" />
-          </ActionButton>
-        )}
+        <LanguageSelector />
+        <ActionButton onClick={sharePage}>
+          <FaShareAlt aria-label="Compartir" size="1.25rem" />
+        </ActionButton>
         <ActionButton onClick={() => setShowTooltip(!showTooltip)}>
           <FaInfoCircle aria-label="Información" size="1.25rem" />
         </ActionButton>

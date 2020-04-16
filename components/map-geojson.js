@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import MapGL, { Source, Layer } from "react-map-gl";
 import styled, { css } from "styled-components";
 import getConfig from "next/config";
+import { FaRegTimesCircle } from "react-icons/fa";
 
 import { useGlobalState } from "../state-context";
 import useMediaQuery from "../hooks/use-media-query";
 import useGeoJsonCities from "../hooks/use-geojson-cities";
 import useDataLayer from "../hooks/use-data-layer";
 import useViewport from "../hooks/use-viewport";
-import { TABLET } from "../utils/breakpoints";
+import { TABLET, DESKTOP } from "../utils/breakpoints";
 import { SET_SELECTED_PROVINCE } from "../state-context/reducer";
 
 const {
@@ -24,16 +25,11 @@ const MapContainer = styled.div`
     top: 0;
   }
 
-  @media (min-width: ${TABLET}px) {
+  @media (min-width: ${DESKTOP}px) {
     & > div {
-      margin-top: 8rem;
-      padding-bottom: 8rem;
-    }
-  }
-
-  @media (max-width: ${TABLET}px) {
-    & > div {
-      padding-bottom: 12.5rem;
+      margin-left: 22rem;
+      margin-right: 22rem;
+      max-width: calc(100% - 44rem);
     }
   }
 `;
@@ -42,8 +38,8 @@ const TooltipContainer = styled.div`
   position: absolute;
   margin: 8px;
   padding: 4px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
+  background: ${({ theme }) => theme.colors.blacktransparent};
+  color: ${({ theme }) => theme.colors.white};
   max-width: 280px;
   font-size: 10px;
   z-index: 9;
@@ -84,6 +80,76 @@ const Confirmed = styled.h4`
   }
 `;
 
+const ClearProvince = styled.span`
+  align-content: center;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.white};
+  box-shadow: ${({ theme }) => theme.shadows.surface()};
+  border-radius: 0.5rem;
+  color: inherit;
+  display: grid;
+  font-weight: bold;
+  grid-template-columns: auto 1.5rem;
+  height: 2.375rem;
+  left: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  position: absolute;
+  top: 1rem;
+  transform: translateX(-50%);
+  transition: 250ms;
+  width: 300px;
+  z-index: 314160;
+
+  :hover {
+    cursor: pointer;
+  }
+
+  button {
+    align-items: center;
+    appearance: none;
+    background-color: ${({ theme }) => theme.colors.white};
+    color: inherit;
+    border: 0;
+    display: flex;
+    padding: 0;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  svg {
+    height: 1.625rem;
+    width: 1.625rem;
+  }
+
+  ${({ isHidden }) => isHidden && css`
+    opacity: 0;
+    visibility: hidden;
+
+    svg {
+      display: none;
+    }
+  `}
+`;
+
+function useHoveredFeature(selectedProvince) {
+  const [hoveredFeatured, setHoveredFeatured] = useState({
+    feature: null,
+    x: 0,
+    y: 0,
+  });
+
+  useEffect(() => {
+    setHoveredFeatured({ feature: null, x: 0, y: 0 });
+  }, [selectedProvince]);
+
+  return [hoveredFeatured, setHoveredFeatured];
+}
+
 function Tooltip({ data }) {
   const [leftPosition, setLeftPosition] = useState(false);
   const tooltipRef = useRef(null);
@@ -120,13 +186,12 @@ function Tooltip({ data }) {
   );
 }
 
-function Map({ geoJson, confirmedByCity }) {
+function Map({ geoJson, confirmedByCity, provincesKeys }) {
   const [{ selectedProvince }, dispatch] = useGlobalState();
   const [geoJsonCities] = useGeoJsonCities(selectedProvince, confirmedByCity);
   const isProvinceActive =
     selectedProvince != null && geoJsonCities.features.length > 0;
   const dataLayer = useDataLayer(isProvinceActive);
-
   const isTablet = useMediaQuery(`(min-width: ${TABLET}px)`);
 
   const mapData = {
@@ -142,16 +207,15 @@ function Map({ geoJson, confirmedByCity }) {
     selectedProvince
   );
 
-  const [hoveredFeature, setHoveredFeature] = useState({
-    feature: null,
-    x: 0,
-    y: 0,
-  });
+  const [hoveredFeature, setHoveredFeature] = useHoveredFeature(
+    selectedProvince
+  );
 
   const handleClick = (event) => {
     const feature = event.features.find(
       ({ properties }) => properties.dpa_prov && !properties.dpa_canton
     );
+
     if (feature) {
       dispatch({
         type: SET_SELECTED_PROVINCE,
@@ -182,6 +246,7 @@ function Map({ geoJson, confirmedByCity }) {
         onClick={handleClick}
         onHover={handleHover}
         mapboxApiAccessToken={mapboxToken}
+        getCursor={() => "pointer"}
         key={isTablet}
       >
         <Source type="geojson" data={mapData}>
@@ -190,6 +255,22 @@ function Map({ geoJson, confirmedByCity }) {
         </Source>
         {hoveredFeature.feature && <Tooltip data={hoveredFeature} />}
       </MapGL>
+      <ClearProvince isHidden={!selectedProvince}>
+        {provincesKeys[selectedProvince]}
+        <button
+          onClick={() =>
+            dispatch({
+              type: SET_SELECTED_PROVINCE,
+              payload: null,
+            })
+          }
+        >
+          <FaRegTimesCircle
+            aria-hidden="true"
+            aria-label="Deseleccionar provincia"
+          />
+        </button>
+      </ClearProvince>
     </MapContainer>
   );
 }

@@ -1,5 +1,7 @@
 import fetch from "isomorphic-unfetch";
 import getConfig from "next/config";
+import uniqWith from "lodash/uniqWith";
+import isEqual from "lodash/isEqual";
 
 const {
   serverRuntimeConfig: { airtableDb, airtableApikey },
@@ -59,12 +61,22 @@ const createEcuadorCities = async (data) => {
     return acc;
   }, {});
 
+  const provincesKey = uniqWith(
+    ecuadorCities.map(({ cartodbId, province }) => [cartodbId, province]),
+    isEqual
+  ).reduce((acc, [key, label]) => {
+    acc[key] = label;
+
+    return acc;
+  }, {});
+
   return Object.assign({}, data, {
     provinces,
     cities: ecuadorCities,
     confirmed,
     confirmedByProvince,
     confirmedByCity,
+    provincesKey,
   });
 };
 

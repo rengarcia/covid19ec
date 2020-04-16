@@ -5,17 +5,11 @@ import { SET_SELECTED_DATASET } from "../state-context/reducer";
 
 const regions = [
   {
-    label: {
-      en: "Ecuador",
-      es: "Ecuador",
-    },
+    label: "🇪🇨 Ecuador",
     value: "ecuador",
   },
   {
-    label: {
-      en: "World",
-      es: "Mundo",
-    },
+    label: "🌎 Mundo",
     value: "world",
   },
 ];
@@ -53,17 +47,19 @@ const Button = styled.button`
 `;
 
 function RegionSelector() {
-  const [{ selectedDataset, selectedLanguage }, dispatch] = useGlobalState();
+  const [{ selectedDataset }, dispatch] = useGlobalState();
 
   return (
     <Group role="group">
       {regions.map(({ label, value }) => (
         <Button
           aria-pressed={selectedDataset === value}
-          onClick={() => dispatch({ type: SET_SELECTED_DATASET, payload: value })}
+          onClick={() =>
+            dispatch({ type: SET_SELECTED_DATASET, payload: value })
+          }
           key={value}
         >
-          {label[selectedLanguage]}
+          {label}
         </Button>
       ))}
     </Group>

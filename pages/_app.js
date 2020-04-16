@@ -8,6 +8,7 @@ import { initialState, reducer } from "../state-context/reducer";
 export const theme = {
   colors: {
     black: "#000000",
+    blacktransparent: "rgba(0, 0, 0, 0.8)",
     firebrick: "#c81912",
     matterhorn: "#515151",
     whitesmoke: "#f7f7f7",

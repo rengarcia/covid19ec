@@ -38,6 +38,7 @@ function Search({ onChange, value }) {
       <Label htmlFor="search">Buscar provincias</Label>
       <SearchContainer>
         <input
+          autoComplete="off"
           id="search"
           maxLength={32}
           placeholder="Buscar…"

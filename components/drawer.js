@@ -5,37 +5,50 @@ import {
   FaBiohazard,
   FaSkullCrossbones,
   FaNotesMedical,
+  FaVial,
 } from "react-icons/fa";
 
 import RegionSelector from "./region-selector";
 import ProvincesList from "./provinces-list";
 import StatsBlock from "./stats-block";
 import { useGlobalState } from "../state-context";
+import { DESKTOP } from "../utils/breakpoints";
 
 const DrawerContainer = styled.div`
   background-color: ${({ theme }) => rgba(theme.colors.whitesmoke, 0.8)};
   backdrop-filter: blur(0.5rem);
-  border-radius: 1.25rem 1.25rem 0 0;
   box-shadow: ${({ theme }) => theme.shadows.surface(true)};
-  left: 0;
   padding: 2rem;
-  position: absolute;
-  top: 100%;
-  transform: translateY(-13.75rem);
-  transition: transform 300ms;
-  right: 0;
   z-index: 314159;
 
-  ::after {
-    background-color: ${({ theme }) => theme.colors.silver};
-    border-radius: 3px;
-    content: "";
-    height: 6px;
-    left: 50%;
+  @media (max-width: ${DESKTOP - 1}px) {
+    border-radius: 1.25rem 1.25rem 0 0;
+    left: 0;
     position: absolute;
-    top: 0.5rem;
-    transform: translateX(-50%);
-    width: 100px;
+    transform: translateY(-13.75rem);
+    transition: transform 300ms;
+    right: 0;
+    top: 100%;
+    z-index: 314159;
+
+    ::after {
+      background-color: ${({ theme }) => theme.colors.silver};
+      border-radius: 3px;
+      content: "";
+      height: 6px;
+      left: 50%;
+      position: absolute;
+      top: 0.5rem;
+      transform: translateX(-50%);
+      width: 100px;
+    }
+  }
+
+  @media (min-width: ${DESKTOP}px) {
+    max-height: 100%;
+    position: relative;
+    overflow-y: auto;
+    z-index: 314158;
   }
 `;
 
@@ -49,11 +62,11 @@ const Separator = styled.hr`
 
 function Drawer({ data }) {
   const [{ selectedDataset }] = useGlobalState();
-  const { confirmed, deaths, recovered } = data[selectedDataset];
+  const { confirmed, deaths, labSamples, recovered } = data[selectedDataset];
 
   return (
     <DrawerContainer>
-      {/* <RegionSelector /> */}
+      <RegionSelector />
       <section>
         <StatsBlock
           icon={<FaBiohazard aria-hidden="true" />}
@@ -72,6 +85,13 @@ function Drawer({ data }) {
           percentage={`${((recovered * 100) / confirmed).toFixed(2)}%`}
           value={recovered}
         />
+        {selectedDataset === "ecuador" && (
+          <StatsBlock
+            icon={<FaVial aria-hidden="true" />}
+            label="Muestras"
+            value={labSamples}
+          />
+        )}
       </section>
       <Separator aria-orientation="horizontal" role="separator" />
       <section>

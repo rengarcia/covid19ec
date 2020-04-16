@@ -3,26 +3,34 @@ import bbox from "@turf/bbox";
 import { WebMercatorViewport, FlyToInterpolator } from "react-map-gl";
 
 import useMediaQuery from "../hooks/use-media-query";
-import { TABLET } from "../utils/breakpoints";
+import { WIDE } from "../utils/breakpoints";
+
+const getInitialViewport = (zoom) => ({
+  latitude: -1.5395,
+  longitude: -78.23037,
+  zoom,
+  bearing: 0,
+  pitch: 0,
+  transitionInterpolator: new FlyToInterpolator({ speed: 1.2 }),
+  transitionDuration: "auto",
+});
 
 function useViewport(features, selectedProvince) {
-  const isTablet = useMediaQuery(`(min-width: ${TABLET}px)`);
-  const getZoom = () => (isTablet ? 6 : 5);
+  const [userSelectedFeature, setUserSelectedFeature] = useState(false);
+  const isWide = useMediaQuery(`(min-width: ${WIDE}px)`);
+  const getZoom = () => (isWide ? 5.5 : 5);
 
-  const [viewport, setViewport] = useState({
-    latitude: -1.5395,
-    longitude: -78.23037,
-    zoom: getZoom(),
-    bearing: 0,
-    pitch: 0,
-  });
+  const [viewport, setViewport] = useState(getInitialViewport(getZoom()));
 
   useEffect(() => {
     const feature = features.find(
       ({ properties }) =>
         properties.dpa_prov === selectedProvince && !properties.dpa_canton
     );
+
     if (feature) {
+      setUserSelectedFeature(true);
+
       const [minLng, minLat, maxLng, maxLat] = bbox(feature);
       const wmViewport = new WebMercatorViewport(viewport);
       const { longitude, latitude, zoom } = wmViewport.fitBounds(
@@ -40,9 +48,9 @@ function useViewport(features, selectedProvince) {
         longitude,
         latitude,
         zoom,
-        transitionInterpolator: new FlyToInterpolator({ speed: 1.2 }),
-        transitionDuration: "auto",
       });
+    } else if (!feature && userSelectedFeature) {
+      setViewport(getInitialViewport(getZoom()));
     }
   }, [features, selectedProvince]);
 

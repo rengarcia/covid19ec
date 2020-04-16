@@ -4,7 +4,6 @@ export const SET_SELECTED_LANGUAGE = "SET_SELECTED_LANGUAGE";
 
 export const initialState = {
   selectedProvince: null,
-  selectedCity: null,
   selectedDataset: "ecuador",
   selectedLanguage: "es",
 };
