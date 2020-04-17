@@ -59,7 +59,7 @@ const Actions = styled.div`
 const ActionButton = styled.button`
   align-items: center;
   appearance: none;
-  background-color: ${({ theme }) => theme.colors.trasparent};
+  background-color: ${({ theme }) => theme.colors.transparent};
   border: 0;
   color: inherit;
   display: flex;

@@ -1,9 +1,9 @@
 import fetch from "isomorphic-unfetch";
 
 const ECUADOR_GEOJSON_URL =
-  "https://sgr-ecuador.carto.com/api/v2/sql?format=geojson&q=select * from public.provincias"
+  "https://4ndresg17.carto.com/api/v2/sql?format=geojson&q=select * from public.provinciasf";
 
-  async function getEcuadorGeoJson() {
+async function getEcuadorGeoJson() {
   const response = await fetch(ECUADOR_GEOJSON_URL);
 
   return await response.json();

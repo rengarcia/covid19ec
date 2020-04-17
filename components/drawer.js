@@ -7,10 +7,9 @@ import {
   FaNotesMedical,
   FaVial,
 } from "react-icons/fa";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 import RegionSelector from "./region-selector";
-import ProvincesList from "./provinces-list";
 import StatsBlock from "./stats-block";
 import { useGlobalState } from "../state-context";
 import { DESKTOP } from "../utils/breakpoints";
@@ -26,7 +25,7 @@ const DrawerContainer = styled.div`
     border-radius: 1.25rem 1.25rem 0 0;
     left: 0;
     position: absolute;
-    transform: translateY(-13.75rem);
+    transform: translateY(-12rem);
     transition: transform 300ms;
     right: 0;
     top: 100%;
@@ -46,14 +45,18 @@ const DrawerContainer = styled.div`
   }
 
   @media (min-width: ${DESKTOP}px) {
-    max-height: 100%;
+    height: 100%;
     position: relative;
     overflow-y: auto;
     z-index: 314158;
   }
+
+  @media (max-width: ${DESKTOP}px) {
+    padding-top: 2.5rem;
+  }
 `;
 
-const Separator = styled.hr`
+export const Separator = styled.hr`
   border-color: ${({ theme }) => theme.colors.silver};
   border-style: solid;
   border-width: 0 0 1px;
@@ -72,32 +75,28 @@ function Drawer({ data }) {
       <section>
         <StatsBlock
           icon={<FaBiohazard aria-hidden="true" />}
-          label={t('confirmed')}
+          label={t("confirmed")}
           value={confirmed}
         />
         <StatsBlock
           icon={<FaSkullCrossbones aria-hidden="true" />}
-          label={t('deaths')}
+          label={t("deaths")}
           percentage={`${((deaths * 100) / confirmed).toFixed(2)}%`}
           value={deaths}
         />
         <StatsBlock
           icon={<FaNotesMedical aria-hidden="true" />}
-          label={t('recovered')}
+          label={t("recovered")}
           percentage={`${((recovered * 100) / confirmed).toFixed(2)}%`}
           value={recovered}
         />
         {selectedDataset === "ecuador" && (
           <StatsBlock
             icon={<FaVial aria-hidden="true" />}
-            label={t('labSamples')}
+            label={t("labSamples")}
             value={labSamples}
           />
         )}
-      </section>
-      <Separator aria-orientation="horizontal" role="separator" />
-      <section>
-        <ProvincesList provinces={data.ecuador.provinces} />
       </section>
     </DrawerContainer>
   );

@@ -52,7 +52,9 @@ const createEcuadorCities = async (data) => {
     if (!acc[item.cartodbId]) {
       acc[item.cartodbId] = 0;
     }
+
     acc[item.cartodbId] += item.confirmed || 0;
+
     return acc;
   }, {});
 

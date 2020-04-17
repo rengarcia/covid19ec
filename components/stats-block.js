@@ -61,6 +61,14 @@ const Block = styled.div`
     text-align: center;
     width: 100%;
 
+    :first-of-type {
+      margin-top: 1rem;
+    }
+
+    & + & {
+      margin-top: 0.75rem;
+    }
+
     &:not(:last-of-type) {
       margin-right: 0.75rem;
     }

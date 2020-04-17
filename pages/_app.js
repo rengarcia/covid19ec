@@ -4,6 +4,7 @@ import { ThemeProvider, createGlobalStyle } from "styled-components";
 
 import { StateProvider } from "../state-context";
 import { initialState, reducer } from "../state-context/reducer";
+import { DESKTOP } from "../utils/breakpoints";
 
 export const theme = {
   colors: {
@@ -13,7 +14,7 @@ export const theme = {
     matterhorn: "#515151",
     whitesmoke: "#f7f7f7",
     silver: "#c4c4c4",
-    trasparent: "transparent",
+    transparent: "transparent",
     white: "#ffffff",
   },
   shadows: {

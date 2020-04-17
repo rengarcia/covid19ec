@@ -10,9 +10,9 @@ import stop from "../utils/stop";
 import { DESKTOP } from "../utils/breakpoints";
 
 const Container = styled.main`
+  box-sizing: border-box;
   height: 100vh;
-  margin-top: 2.75rem;
-  padding-bottom: 2.75rem;
+  padding-top: 2.75rem;
   position: relative;
 
   @media (min-width: ${DESKTOP}px) {
@@ -22,21 +22,23 @@ const Container = styled.main`
   }
 `;
 
-function updateProvinceFeature(feature, confirmedByProvince) {
+function updateProvinceFeature(feature, confirmedByProvince, deathsByProvince) {
   const confirmed = confirmedByProvince[feature.properties.dpa_prov] || 0;
+  const deaths = deathsByProvince[feature.properties.dpa_prov] || 0;
 
   return {
     ...feature,
     properties: {
       ...feature.properties,
       confirmed,
+      deaths,
       stop: stop(confirmed),
     },
   };
 }
 
 function Index({ ecuador, world }) {
-  const { provinces, confirmedByProvince, geoJson } = ecuador;
+  const { provinces, confirmedByProvince, deathsByProvince, geoJson } = ecuador;
 
   const data = {
     ecuador: {
@@ -53,7 +55,7 @@ function Index({ ecuador, world }) {
       geoJson: {
         type: "FeatureCollection",
         features: geoJson.features.map((feature) =>
-          updateProvinceFeature(feature, confirmedByProvince)
+          updateProvinceFeature(feature, confirmedByProvince, deathsByProvince)
         ),
       },
     },
@@ -69,6 +71,7 @@ function Index({ ecuador, world }) {
         <MapGeoJson
           geoJson={data.ecuador.geoJson}
           confirmedByCity={data.ecuador.confirmedByCity}
+          provinces={data.ecuador.provinces}
           provincesKeys={data.ecuador.provincesKey}
         />
       </Container>

@@ -1,12 +1,47 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
+import { rgba } from "polished";
+import { useTranslation } from "react-i18next";
 
 import Search from "./search";
 import useDebouncedQuery from "../hooks/use-debounced-query";
 import useLocationsSearch from "../hooks/use-locations-search";
 import formatNumber from "../utils/formatNumber";
 import { useGlobalState } from "../state-context";
-import { SET_SELECTED_PROVINCE } from "../state-context/reducer";
+import { SET_QUERY, SET_SELECTED_PROVINCE } from "../state-context/reducer";
+import { DESKTOP } from "../utils/breakpoints";
+
+const ProvinceContainer = styled.div`
+  background-color: ${({ theme }) => rgba(theme.colors.whitesmoke, 0.8)};
+  backdrop-filter: blur(0.5rem);
+  border-radius: 0.5rem;
+  box-shadow: ${({ theme }) => theme.shadows.surface(true)};
+  margin-top: 0.5rem;
+  max-height: 7.125rem;
+  overflow-y: auto;
+  padding: 0.75rem;
+
+  @media (min-height: 28rem) {
+    max-height: 10rem;
+  }
+
+  @media (min-height: 32rem) {
+    max-height: 18.5rem;
+  }
+`;
+
+const Container = styled.section`
+  position: fixed;
+  left: 1rem;
+  max-width: 260px;
+  top: 3.75rem;
+  width: 100%;
+
+  @media (min-width: ${DESKTOP}px) {
+    left: 23rem;
+    max-width: 320px;
+  }
+`;
 
 const ProvinceButton = styled.button`
   align-items: center;
@@ -17,9 +52,8 @@ const ProvinceButton = styled.button`
   box-shadow: ${({ theme }) => theme.shadows.surface()};
   display: flex;
   justify-content: space-between;
-  height: 2.375rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  min-height: 2.375rem;
+  padding: 0.5rem 1rem;
   position: relative;
   width: 100%;
   z-index: 1;
@@ -28,12 +62,8 @@ const ProvinceButton = styled.button`
     cursor: pointer;
   }
 
-  :first-of-type {
-    margin-top: 0.875rem;
-  }
-
   & + & {
-    margin-top: 0.625rem;
+    margin-top: 0.5rem;
   }
 
   strong:first-child {
@@ -49,7 +79,7 @@ const ProvinceButton = styled.button`
 
 const NoResults = styled.p`
   margin-bottom: 0;
-  margin-top: 0.875rem;
+  margin-top: 0;
 `;
 
 function Province({ cities, name }) {
@@ -76,27 +106,36 @@ function Province({ cities, name }) {
 }
 
 function Provinces({ filteredProvinces }) {
+  const { t } = useTranslation();
   const provinces = Object.entries(filteredProvinces);
 
-  return provinces.length > 0 ? (
-    provinces.map(([province, cities]) => (
-      <Province cities={cities} key={province} name={province} />
-    ))
-  ) : (
-    <NoResults role="alert">No se encontraron resultados</NoResults>
+  return (
+    <ProvinceContainer>
+      {provinces.length > 0 ? (
+        provinces.map(([province, cities]) => (
+          <Province cities={cities} key={province} name={province} />
+        ))
+      ) : (
+        <NoResults role="alert">{t("noResults")}</NoResults>
+      )}
+    </ProvinceContainer>
   );
 }
 
-function ProvincesList({ provinces }) {
-  const [query, setQuery] = useState("");
+function ProvincesList({ provinces, provincesKeys }) {
+  const [{ query }, dispatch] = useGlobalState();
   const debouncedQuery = useDebouncedQuery(query);
   const filteredProvinces = useLocationsSearch(provinces, debouncedQuery);
 
   return (
-    <>
-      <Search onChange={setQuery} value={query} />
-      <Provinces filteredProvinces={filteredProvinces} />
-    </>
+    <Container>
+      <Search
+        provincesKeys={provincesKeys}
+        onChange={(payload) => dispatch({ type: SET_QUERY, payload })}
+        value={query}
+      />
+      {query.trim() && <Provinces filteredProvinces={filteredProvinces} />}
+    </Container>
   );
 }
 

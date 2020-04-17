@@ -2,15 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import MapGL, { Source, Layer } from "react-map-gl";
 import styled, { css } from "styled-components";
 import getConfig from "next/config";
-import { FaRegTimesCircle } from "react-icons/fa";
 
+import ProvincesList from "./provinces-list";
+import { useTranslation } from "react-i18next";
 import { useGlobalState } from "../state-context";
+import { TABLET, DESKTOP } from "../utils/breakpoints";
+import { SET_SELECTED_PROVINCE } from "../state-context/reducer";
 import useMediaQuery from "../hooks/use-media-query";
 import useGeoJsonCities from "../hooks/use-geojson-cities";
 import useDataLayer from "../hooks/use-data-layer";
 import useViewport from "../hooks/use-viewport";
-import { TABLET, DESKTOP } from "../utils/breakpoints";
-import { SET_SELECTED_PROVINCE } from "../state-context/reducer";
 
 const {
   publicRuntimeConfig: { mapboxToken, mapStyle },
@@ -20,6 +21,7 @@ const MapContainer = styled.div`
   & > div {
     bottom: 0;
     left: 0;
+    margin-top: 2.75rem;
     position: fixed !important;
     right: 0;
     top: 0;
@@ -35,7 +37,7 @@ const MapContainer = styled.div`
 
   @media (max-width: ${DESKTOP}px) {
     & > div {
-      padding-bottom: 9.75rem;
+      padding-bottom: 10.25rem;
     }
   }
 `;
@@ -75,7 +77,7 @@ const City = styled.h4`
   margin: 0;
 `;
 
-const Confirmed = styled.h4`
+const CasesCategory = styled.h4`
   display: grid;
   grid-template-columns: auto max-content;
   gap: 1.5rem;
@@ -84,64 +86,6 @@ const Confirmed = styled.h4`
   span {
     font-weight: normal;
   }
-`;
-
-const ClearProvince = styled.span`
-  align-content: center;
-  align-items: center;
-  background-color: ${({ theme }) => theme.colors.white};
-  box-shadow: ${({ theme }) => theme.shadows.surface()};
-  border-radius: 0.5rem;
-  color: inherit;
-  display: grid;
-  font-weight: bold;
-  grid-template-columns: auto 1.5rem;
-  height: 2.375rem;
-  left: 50%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  position: absolute;
-  top: 1rem;
-  transform: translateX(-50%);
-  transition: 250ms;
-  width: 300px;
-  z-index: 314160;
-
-  :hover {
-    cursor: pointer;
-  }
-
-  button {
-    align-items: center;
-    appearance: none;
-    background-color: ${({ theme }) => theme.colors.white};
-    color: inherit;
-    border: 0;
-    display: flex;
-    padding: 0;
-
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
-  svg {
-    height: 1.625rem;
-    width: 1.625rem;
-  }
-
-  ${({ isHidden }) =>
-    isHidden &&
-    css`
-      opacity: 0;
-      visibility: hidden;
-
-      svg {
-        display: none;
-      }
-    `}
 `;
 
 function useHoveredFeature(selectedProvince) {
@@ -160,9 +104,10 @@ function useHoveredFeature(selectedProvince) {
 
 function Tooltip({ data }) {
   const [leftPosition, setLeftPosition] = useState(false);
+  const { t } = useTranslation();
   const tooltipRef = useRef(null);
   const { feature, x, y } = data;
-  const { dpa_despro, dpa_descan, confirmed } = feature.properties;
+  const { dpa_despro, dpa_descan, confirmed, deaths } = feature.properties;
 
   useEffect(() => {
     if (tooltipRef.current) {
@@ -185,16 +130,22 @@ function Tooltip({ data }) {
       <Cases>
         <Province>{dpa_despro}</Province>
         <City>{dpa_descan}</City>
-        <Confirmed>
-          <span>Confirmados</span>
+        <CasesCategory>
+          <span>{t("confirmed")}</span>
           <strong>{confirmed}</strong>
-        </Confirmed>
+        </CasesCategory>
+        {deaths !== undefined && (
+          <CasesCategory>
+            <span>{t("deaths")}</span>
+            <strong>{deaths}</strong>
+          </CasesCategory>
+        )}
       </Cases>
     </TooltipContainer>
   );
 }
 
-function Map({ geoJson, confirmedByCity, provincesKeys }) {
+function Map({ geoJson, confirmedByCity, provinces, provincesKeys }) {
   const [{ selectedProvince }, dispatch] = useGlobalState();
   const [geoJsonCities] = useGeoJsonCities(selectedProvince, confirmedByCity);
   const isProvinceActive =
@@ -248,7 +199,7 @@ function Map({ geoJson, confirmedByCity, provincesKeys }) {
       <MapGL
         {...viewport}
         width="100%"
-        height="100vh"
+        height="calc(100vh - 2.75rem)"
         mapStyle={mapStyle}
         onViewportChange={(newViewport) => setViewport(newViewport)}
         onClick={handleClick}
@@ -263,22 +214,7 @@ function Map({ geoJson, confirmedByCity, provincesKeys }) {
         </Source>
         {hoveredFeature.feature && <Tooltip data={hoveredFeature} />}
       </MapGL>
-      <ClearProvince isHidden={!selectedProvince}>
-        {provincesKeys[selectedProvince]}
-        <button
-          onClick={() =>
-            dispatch({
-              type: SET_SELECTED_PROVINCE,
-              payload: null,
-            })
-          }
-        >
-          <FaRegTimesCircle
-            aria-hidden="true"
-            aria-label="Deseleccionar provincia"
-          />
-        </button>
-      </ClearProvince>
+      <ProvincesList provincesKeys={provincesKeys} provinces={provinces} />
     </MapContainer>
   );
 }

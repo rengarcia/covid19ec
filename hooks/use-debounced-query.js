@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function useDebouncedQuery(query, delay = 600) {
+function useDebouncedQuery(query, delay = 400) {
   const [debouncedQuery, setDebouncedQuery] = useState(query);
 
   useEffect(() => {
