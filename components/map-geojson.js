@@ -35,7 +35,7 @@ const MapContainer = styled.div`
     }
   }
 
-  @media (max-width: ${DESKTOP}px) {
+  @media (max-width: ${DESKTOP - 1}px) {
     & > div {
       padding-bottom: 10.25rem;
     }

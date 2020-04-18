@@ -11,14 +11,16 @@ import { useGlobalState } from "../state-context";
 import useClickOutside from "../hooks/use-click-outside";
 import { SET_SELECTED_LANGUAGE } from "../state-context/reducer";
 import i18n from "../i18n";
+import ecuadorFlag from "../assets/ecuador.png";
+import usaFlag from "../assets/usa.png";
 
 const languages = [
   {
-    label: "🇪🇨 ES",
+    label: "ES",
     value: "es",
   },
   {
-    label: "🇺🇸 EN",
+    label: "EN",
     value: "en",
   },
 ];
@@ -106,7 +108,7 @@ const LanguageSelect = styled.div`
     font-size: 1rem;
     font-weight: bold;
     height: 1.75rem;
-    padding-left: 0.5rem;
+    padding-left: 2.25rem;
     padding-right: 1.5rem;
 
     :hover {
@@ -114,18 +116,35 @@ const LanguageSelect = styled.div`
     }
   }
 
-  svg {
+  svg,
+  img {
     pointer-events: none;
     position: absolute;
-    right: 0.5rem;
     top: 50%;
     transform: translateY(-50%);
   }
 
+  svg {
+    right: 0.5rem;
+  }
+
+  img {
+    left: 0.5rem;
+    max-width: 1.25rem;
+  }
+
   @media (min-width: ${DESKTOP}px) {
     select {
-      padding-left: 0.75rem;
+      padding-left: 2.5rem;
       padding-right: 1.75rem;
+    }
+
+    svg {
+      right: 0.75rem;
+    }
+
+    img {
+      left: 0.75rem;
     }
   }
 `;
@@ -191,6 +210,7 @@ function LanguageSelector() {
 
   return (
     <LanguageSelect>
+      <img src={selectedLanguage === "es" ? ecuadorFlag : usaFlag} />
       <select
         onChange={(e) => {
           dispatch({ type: SET_SELECTED_LANGUAGE, payload: e.target.value });

@@ -24,6 +24,7 @@
     "next-images": "^1.4.0",
     "polished": "^3.5.1",
     "react": "^16.8.0",
+    "react-data-table-component": "^6.7.1",
     "react-dom": "^16.8.0",
     "react-i18next": "^11.3.4",
     "react-icons": "^3.9.0",

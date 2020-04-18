@@ -6,6 +6,9 @@ import { useGlobalState } from "../state-context";
 import { SET_SELECTED_DATASET } from "../state-context/reducer";
 import { DESKTOP } from "../utils/breakpoints";
 
+import ecuadorFlag from "../assets/ecuador.png";
+import globe from "../assets/globe.png";
+
 const regions = ["ecuador", "world"];
 
 const Group = styled.div`
@@ -39,6 +42,11 @@ const Button = styled.button`
       text-shadow: ${({ theme }) => theme.shadows.deep()};
     `}
 
+  img {
+    max-width: 1.25rem;
+    margin-right: 0.375rem;
+  }
+
   @media (min-width: ${DESKTOP}px) {
     font-size: 1.25rem;
     height: 2.75rem;
@@ -59,6 +67,10 @@ function RegionSelector() {
           }
           key={value}
         >
+          <img
+            src={value === "ecuador" ? ecuadorFlag : globe}
+            role="presentation"
+          />{" "}
           {t(value)}
         </Button>
       ))}

@@ -8,6 +8,7 @@ import {
   FaVial,
 } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import DataTable from "react-data-table-component";
 
 import RegionSelector from "./region-selector";
 import StatsBlock from "./stats-block";
@@ -18,7 +19,7 @@ const DrawerContainer = styled.div`
   background-color: ${({ theme }) => rgba(theme.colors.whitesmoke, 0.8)};
   backdrop-filter: blur(0.5rem);
   box-shadow: ${({ theme }) => theme.shadows.surface(true)};
-  padding: 2rem;
+  padding: 2.5rem 1.75rem 2rem;
   z-index: 314159;
 
   @media (max-width: ${DESKTOP - 1}px) {
@@ -46,13 +47,10 @@ const DrawerContainer = styled.div`
 
   @media (min-width: ${DESKTOP}px) {
     height: 100%;
+    padding: 1.75rem;
     position: relative;
     overflow-y: auto;
     z-index: 314158;
-  }
-
-  @media (max-width: ${DESKTOP}px) {
-    padding-top: 2.5rem;
   }
 `;
 
@@ -63,6 +61,121 @@ export const Separator = styled.hr`
   margin-bottom: 1.25rem;
   margin-top: 1.25rem;
 `;
+
+const TableContainer = styled.section`
+  background-color: ${({ theme }) => theme.colors.white};
+  border-radius: 0.5rem;
+  overflow: hidden;
+
+  > div {
+    overflow-x: hidden;
+  }
+
+  header > div {
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  [role="button"] {
+    color: ${({ theme }) => theme.colors.matterhorn};
+    font-weight: bold;
+  }
+
+  [role="row"] {
+    > div:not(:first-of-type) {
+      flex-grow: 0;
+      min-width: 4rem;
+      padding-left: 0;
+    }
+
+    > div:first-of-type {
+      max-width: calc(100% - 12rem);
+    }
+  }
+`;
+
+function Table({ data }) {
+  const { t } = useTranslation();
+  const columns = [
+    {
+      name: t("province"),
+      selector: "name",
+      sortable: true,
+    },
+    {
+      name: <FaBiohazard title="Confirmados" />,
+      selector: "confirmed",
+      sortable: true,
+      right: true,
+    },
+    {
+      name: <FaSkullCrossbones title="Muertes" />,
+      selector: "deaths",
+      sortable: true,
+      right: true,
+    },
+  ];
+
+  const customStyles = {
+    header: {
+      style: {
+        fontSize: "1rem",
+        color: "inherit",
+        minHeight: "3rem",
+        paddingLeft: "0.75rem",
+        paddingRight: "0.75rem",
+      },
+    },
+    headCells: {
+      style: {
+        fontSize: "0.875rem",
+        paddingLeft: "0.75rem",
+        paddingRight: "0.75rem",
+      },
+    },
+    cells: {
+      style: {
+        fontSize: "0.875rem",
+        paddingLeft: "0.75rem",
+        paddingRight: "0.75rem",
+      },
+    },
+    rows: {
+      style: {
+        minHeight: "2.25rem",
+      },
+    },
+    headRow: {
+      style: {
+        minHeight: "2.5rem",
+      },
+    },
+  };
+
+  const tableData = Object.entries(data.ecuador.provinces).map(
+    ([key, value]) => {
+      const cartodbId = value[0].cartodbId;
+
+      return {
+        name: key,
+        id: cartodbId,
+        confirmed: data.ecuador.confirmedByProvince[cartodbId],
+        deaths: data.ecuador.deathsByProvince[cartodbId],
+      };
+    }
+  );
+
+  return (
+    <TableContainer>
+      <DataTable
+        columns={columns}
+        customStyles={customStyles}
+        data={tableData}
+        title={t("casesByProvince")}
+      />
+    </TableContainer>
+  );
+}
 
 function Drawer({ data }) {
   const [{ selectedDataset }] = useGlobalState();
@@ -98,6 +211,8 @@ function Drawer({ data }) {
           />
         )}
       </section>
+      <Separator />
+      <Table data={data} />
     </DrawerContainer>
   );
 }

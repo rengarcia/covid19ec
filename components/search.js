@@ -6,6 +6,7 @@ import { rgba } from "polished";
 
 import { useGlobalState } from "../state-context";
 import { SET_SELECTED_PROVINCE } from "../state-context/reducer";
+import { DESKTOP } from "../utils/breakpoints";
 
 const Container = styled.div`
   background-color: ${({ theme }) => rgba(theme.colors.whitesmoke, 0.8)};
@@ -13,6 +14,10 @@ const Container = styled.div`
   box-shadow: ${({ theme }) => theme.shadows.surface()};
   border-radius: 0.5rem;
   padding: 0.5rem 0.75rem 0.75rem;
+
+  @media (min-width: ${DESKTOP}px) {
+    padding: 0.75rem 1rem 1rem;
+  }
 `;
 
 const Label = styled.label`
@@ -100,6 +105,11 @@ const ClearProvince = styled.span`
     css`
       display: none;
     `}
+
+  @media (min-width: ${DESKTOP}px) {
+    left: 1.5rem;
+    top: 2.5rem;
+  }
 `;
 
 function Search({ provincesKeys, onChange, value }) {
@@ -125,7 +135,6 @@ function Search({ provincesKeys, onChange, value }) {
           <span>{provincesKeys[selectedProvince]}</span>
           <button
             onClick={(e) =>
-              console.log(e) ||
               dispatch({
                 type: SET_SELECTED_PROVINCE,
                 payload: null,

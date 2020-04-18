@@ -6,12 +6,11 @@ import { useTranslation } from "react-i18next";
 import Search from "./search";
 import useDebouncedQuery from "../hooks/use-debounced-query";
 import useLocationsSearch from "../hooks/use-locations-search";
-import formatNumber from "../utils/formatNumber";
 import { useGlobalState } from "../state-context";
 import { SET_QUERY, SET_SELECTED_PROVINCE } from "../state-context/reducer";
-import { DESKTOP } from "../utils/breakpoints";
+import { DESKTOP, WIDE } from "../utils/breakpoints";
 
-const ProvinceContainer = styled.div`
+const ProvincesContainer = styled.div`
   background-color: ${({ theme }) => rgba(theme.colors.whitesmoke, 0.8)};
   backdrop-filter: blur(0.5rem);
   border-radius: 0.5rem;
@@ -28,6 +27,10 @@ const ProvinceContainer = styled.div`
   @media (min-height: 32rem) {
     max-height: 18.5rem;
   }
+
+  @media (min-width: ${DESKTOP}px) {
+    padding: 1rem;
+  }
 `;
 
 const Container = styled.section`
@@ -39,7 +42,10 @@ const Container = styled.section`
 
   @media (min-width: ${DESKTOP}px) {
     left: 23rem;
-    max-width: 320px;
+  }
+
+  @media (min-width: ${WIDE}px) {
+    max-width: 20rem;
   }
 `;
 
@@ -52,13 +58,15 @@ const ProvinceButton = styled.button`
   box-shadow: ${({ theme }) => theme.shadows.surface()};
   display: flex;
   justify-content: space-between;
-  min-height: 2.375rem;
+  min-height: 2rem;
   padding: 0.5rem 1rem;
   position: relative;
+  transition: 250ms;
   width: 100%;
   z-index: 1;
 
   :hover {
+    box-shadow: ${({ theme }) => theme.shadows.deep()};
     cursor: pointer;
   }
 
@@ -66,14 +74,17 @@ const ProvinceButton = styled.button`
     margin-top: 0.5rem;
   }
 
-  strong:first-child {
+  strong {
     font-weight: normal;
+    margin-right: 0.75rem;
+    overflow: hidden;
     text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  strong:last-child {
-    align-items: center;
-    display: flex;
+  svg {
+    margin-right: 0.25rem;
   }
 `;
 
@@ -85,12 +96,10 @@ const NoResults = styled.p`
 function Province({ cities, name }) {
   const [_, dispatch] = useGlobalState();
   const cartodbId = cities[0].cartodbId;
-  const confirmedByProvince = cities
-    .map(({ confirmed }) => confirmed)
-    .reduce((acc, current) => acc + current, 0);
 
   const handleClick = () => {
     dispatch({ type: SET_SELECTED_PROVINCE, payload: cartodbId });
+
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -100,7 +109,6 @@ function Province({ cities, name }) {
   return (
     <ProvinceButton onClick={handleClick}>
       <strong>{name}</strong>
-      <strong>{formatNumber(confirmedByProvince)}</strong>
     </ProvinceButton>
   );
 }
@@ -109,16 +117,12 @@ function Provinces({ filteredProvinces }) {
   const { t } = useTranslation();
   const provinces = Object.entries(filteredProvinces);
 
-  return (
-    <ProvinceContainer>
-      {provinces.length > 0 ? (
-        provinces.map(([province, cities]) => (
-          <Province cities={cities} key={province} name={province} />
-        ))
-      ) : (
-        <NoResults role="alert">{t("noResults")}</NoResults>
-      )}
-    </ProvinceContainer>
+  return provinces.length > 0 ? (
+    provinces.map(([province, cities]) => (
+      <Province cities={cities} key={province} name={province} />
+    ))
+  ) : (
+    <NoResults role="alert">{t("noResults")}</NoResults>
   );
 }
 
@@ -134,7 +138,11 @@ function ProvincesList({ provinces, provincesKeys }) {
         onChange={(payload) => dispatch({ type: SET_QUERY, payload })}
         value={query}
       />
-      {query.trim() && <Provinces filteredProvinces={filteredProvinces} />}
+      {query.trim() && (
+        <ProvincesContainer>
+          <Provinces filteredProvinces={filteredProvinces} />
+        </ProvincesContainer>
+      )}
     </Container>
   );
 }
