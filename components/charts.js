@@ -294,7 +294,7 @@ function Charts({
           },
         },
         tooltip: {
-          headerFormat: "<b>{series.name}:</b> {point.y}<br />",
+          headerFormat: `<b>${t("cases")}:</b> {point.y}<br />`,
           pointFormat: "{point.date}",
         },
         plotOptions: {

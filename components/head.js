@@ -1,14 +1,16 @@
 import React from "react";
 
 import image from "../assets/ogimage.png";
+import icon from "../assets/favicon.ico";
+
+const title = "Covid-19 Ecuador";
+const description =
+  "Información actualizada de los casos de COVID-19 en Ecuador";
 
 function AppHead() {
-  const title = "Covid-19 Ecuador";
-  const description =
-    "Información actualizada de los casos de COVID-19 en Ecuador";
-
   return (
     <>
+      <link rel="icon" href={icon} />
       <meta name="description" content={description} />
       <meta name="og:title" content={title} />
       <meta name="og:description" content={description} />
