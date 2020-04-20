@@ -1,10 +1,10 @@
 import App from "next/app";
 import React from "react";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
+import "chartist/dist/chartist.min.css";
 
 import { StateProvider } from "../state-context";
 import { initialState, reducer } from "../state-context/reducer";
-import { DESKTOP } from "../utils/breakpoints";
 
 export const theme = {
   colors: {
@@ -57,6 +57,10 @@ const GlobalStyle = createGlobalStyle`
 
   button:hover {
     cursor: pointer;
+  }
+
+  svg {
+    font-family: "Proxima Nova" !important;
   }
 `;
 

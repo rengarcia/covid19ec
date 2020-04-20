@@ -6,6 +6,16 @@
     "name": "Carlos Viteri",
     "url": "https://c4rlosviteri.dev"
   },
+  "contributors": [
+    {
+      "name": "Diego Zuñiga",
+      "email": "diego.zuniga.mendez@gmail.com"
+    },
+    {
+      "name": "Andrés García",
+      "email": "andresgarcia17@icloud.com"
+    }
+  ],
   "scripts": {
     "dev": "next",
     "build": "next build",
@@ -16,6 +26,7 @@
     "@turf/center": "^6.0.1",
     "@turf/center-of-mass": "^6.0.1",
     "date-fns": "^2.12.0",
+    "highcharts": "^8.0.4",
     "i18next": "^19.4.2",
     "isomorphic-unfetch": "^3.0.0",
     "lodash": "^4.17.15",

@@ -10,10 +10,17 @@ import {
 import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
 
+import Charts from "./charts";
 import RegionSelector from "./region-selector";
 import StatsBlock from "./stats-block";
 import { useGlobalState } from "../state-context";
 import { DESKTOP } from "../utils/breakpoints";
+
+const MobileContainer = styled.div`
+  @media (min-width: ${DESKTOP}px) {
+    display: none;
+  }
+`;
 
 const DrawerContainer = styled.div`
   background-color: ${({ theme }) => rgba(theme.colors.whitesmoke, 0.8)};
@@ -213,6 +220,10 @@ function Drawer({ data }) {
       </section>
       <Separator />
       <Table data={data} />
+      <MobileContainer>
+        <Separator />
+        <Charts data={data} />
+      </MobileContainer>
     </DrawerContainer>
   );
 }

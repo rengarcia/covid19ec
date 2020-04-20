@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import createData from "../fetch/create-data";
 import Drawer from "../components/drawer";
+import DrawerStats from "../components/drawer-stats";
 import Header from "../components/header";
 import MapGeoJson from "../components/map-geojson";
 import stop from "../utils/stop";
@@ -31,8 +32,8 @@ function updateProvinceFeature(feature, confirmedByProvince, deathsByProvince) {
       ...feature.properties,
       confirmed,
       deaths,
-      stop: stop(confirmed)
-    }
+      stop: stop(confirmed),
+    },
   };
 }
 
@@ -47,18 +48,18 @@ function Index({ ecuador, world }) {
         .reduce(
           (acc, key) => ({
             ...acc,
-            [key]: provinces[key]
+            [key]: provinces[key],
           }),
           {}
         ),
       geoJson: {
         type: "FeatureCollection",
-        features: geoJson.features.map(feature =>
+        features: geoJson.features.map((feature) =>
           updateProvinceFeature(feature, confirmedByProvince, deathsByProvince)
-        )
-      }
+        ),
+      },
     },
-    world
+    world,
   };
 
   return (
@@ -72,6 +73,7 @@ function Index({ ecuador, world }) {
           provinces={data.ecuador.provinces}
           provincesKeys={data.ecuador.provincesKey}
         />
+        <DrawerStats data={data} />
       </Container>
     </>
   );
