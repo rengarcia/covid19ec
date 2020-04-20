@@ -238,7 +238,7 @@ function Charts({
               distance: 20,
             },
             center: ["50%", "50%"],
-            size: "90%",
+            size: "80%",
             colors: ["#90ed7d", "#f7a35c", "#8085e9"],
           },
           series: {
