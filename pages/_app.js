@@ -1,7 +1,6 @@
 import App from "next/app";
 import React from "react";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
-import "chartist/dist/chartist.min.css";
 
 import { StateProvider } from "../state-context";
 import { initialState, reducer } from "../state-context/reducer";
