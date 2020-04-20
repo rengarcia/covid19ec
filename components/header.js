@@ -249,7 +249,7 @@ function AppHeader({ lastUpdate }) {
           selectedLanguage === "es"
             ? "Información actualizada de los casos de COVID-19 en Ecuador"
             : "Updated information on COVID-19 cases in Ecuador",
-        url: "https://covid19-ecuador.com",
+        url: "https://www.covid19-ecuador.com",
       });
     } catch (err) {
       console.error(err);
