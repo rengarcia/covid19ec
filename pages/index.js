@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 
 import createData from "../fetch/create-data";
-import Charts from "../components/charts";
 import Drawer from "../components/drawer";
 import DrawerStats from "../components/drawer-stats";
 import Header from "../components/header";
@@ -74,8 +73,7 @@ function Index({ ecuador, world }) {
           provinces={data.ecuador.provinces}
           provincesKeys={data.ecuador.provincesKey}
         />
-        <Charts data={data} />
-        {/* <DrawerStats data={data} /> */}
+        <DrawerStats data={data} />
       </Container>
     </>
   );

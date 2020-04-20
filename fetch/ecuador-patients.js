@@ -15,7 +15,7 @@ async function getEcuadorPatients() {
 
 const createEcuadorPatients = async (data) => {
   const response = await getEcuadorPatients();
-  const patientsState = response.records[0];
+  const patientsState = response.records[0].fields;
 
   return Object.assign({}, data, {
     patientsState,

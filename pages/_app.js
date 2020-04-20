@@ -58,9 +58,9 @@ const GlobalStyle = createGlobalStyle`
   button:hover {
     cursor: pointer;
   }
-  
-  .ct-label { 
-    font-size: 0.625rem;
+
+  svg {
+    font-family: "Proxima Nova" !important;
   }
 `;
 
