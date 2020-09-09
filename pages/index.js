@@ -3,12 +3,14 @@ import styled from "styled-components";
 import createData from "../fetch/create-data";
 import Drawer from "../components/drawer";
 import DrawerStats from "../components/drawer-stats";
+import Form from "../components/form";
 import Header from "../components/header";
 import Logo from "../assets/info-circle.svg";
 import MapGeoJson from "../components/map-geojson";
 import stop from "../utils/stop";
 import { DESKTOP } from "../utils/breakpoints";
 import { initGA, logPageView } from "../utils/analytics";
+import ContactUs from "../components/form";
 
 const Container = styled.main`
   box-sizing: border-box;
@@ -75,6 +77,7 @@ function Index({ ecuador, world }) {
     <>
       <Header lastUpdate={data.ecuador.lastUpdate} />
       <Container>
+        <ContactUs></ContactUs>
         <Drawer data={data} />
         <MapGeoJson
           geoJson={data.ecuador.geoJson}
