@@ -23,7 +23,6 @@ const initialState = {
   features: [],
 };
 
-// TODO: Should I make ajax calls here?
 function useGeoJsonCities(provinceId, confirmedByCity) {
   const [geoJsonCities, setGeoJsonCities] = useState(initialState);
   useEffect(() => {
