@@ -8,10 +8,11 @@ import styled from "styled-components";
 import { useGlobalState } from "../state-context";
 import { theme } from "../pages/_app";
 
-const transparentBackground = {
+const chartStyle = {
   chart: {
     backgroundColor: "transparent",
     spacing: [0, 0, 0, 0],
+    height: 428,
   },
 };
 
@@ -29,6 +30,7 @@ function Charts({
       casesBySex,
       patientsState,
       ageGroup,
+      patientSymptoms,
     },
   },
 }) {
@@ -44,12 +46,15 @@ function Charts({
     const sortedTimeline = timeline.sort(
       (a, b) => parseISO(a.date) - parseISO(b.date)
     );
+    const sortedPatientSymptoms = patientSymptoms.sort(
+      (a, b) => parseISO(a.date) - parseISO(b.date)
+    );
 
     if (divAgeGroup.current) {
       Highcharts.chart(divAgeGroup.current, {
         chart: {
           type: "column",
-          ...transparentBackground.chart,
+          ...chartStyle.chart,
         },
         title: {
           text: t("casesByAge"),
@@ -110,7 +115,7 @@ function Charts({
 
     if (divSexCases.current) {
       Highcharts.chart(divSexCases.current, {
-        ...transparentBackground,
+        ...chartStyle,
         title: {
           text: t("casesBySex"),
         },
@@ -160,7 +165,7 @@ function Charts({
 
     if (divTimelineCases.current) {
       Highcharts.chart(divTimelineCases.current, {
-        ...transparentBackground,
+        ...chartStyle,
         title: {
           text: t("timeline"),
         },
@@ -215,6 +220,13 @@ function Charts({
             })),
             name: t("recovered"),
           },
+          {
+            data: sortedTimeline.map((time) => ({
+              y: time.possibleDeaths,
+              date: time.date,
+            })),
+            name: t("possibleDeaths"),
+          },
         ],
         credits: {
           enabled: false,
@@ -224,7 +236,7 @@ function Charts({
 
     if (divPatientsState.current) {
       Highcharts.chart(divPatientsState.current, {
-        ...transparentBackground,
+        ...chartStyle,
         title: {
           text: t("patientsState"),
         },
@@ -272,14 +284,14 @@ function Charts({
       Highcharts.chart(divDailyCases.current, {
         chart: {
           type: "area",
-          ...transparentBackground.chart,
+          ...chartStyle.chart,
         },
         title: {
           text: t("dailyCases"),
         },
         xAxis: {
           tickInterval: 1,
-          categories: sortedTimeline.map(({ date }) =>
+          categories: sortedPatientSymptoms.map(({ date }) =>
             format(parseISO(date), "MM-dd")
           ),
         },
@@ -308,13 +320,7 @@ function Charts({
         series: [
           {
             name: t("dailyCases"),
-            data: sortedTimeline.map(({ confirmed, date }, index, array) => ({
-              date,
-              y:
-                index === 0
-                  ? confirmed
-                  : confirmed - array[index - 1].confirmed,
-            })),
+            data: sortedPatientSymptoms.map((record) => record.count),
           },
         ],
         credits: {

@@ -102,6 +102,57 @@ function useHoveredFeature(selectedProvince) {
   return [hoveredFeatured, setHoveredFeatured];
 }
 
+function getMapData(geoJson, geoJsonCities) {
+  return {
+    ...geoJson,
+    features: [
+      ...geoJson.features.map((f) => mapFeature(f, false)),
+      ...geoJsonCities.features.map((f) => mapFeature(f, false)),
+    ],
+  };
+}
+
+function mapFeature(feature, hovered) {
+  return {
+    ...feature,
+    properties: {
+      ...feature.properties,
+      hovered: hovered ? 1 : 0,
+    },
+  };
+}
+
+function useMapData(hoveredFeature, geoJson, geoJsonCities) {
+  const [mapData, setMapData] = useState(getMapData(geoJson, geoJsonCities));
+  let featureId;
+
+  if (hoveredFeature.feature) {
+    featureId = hoveredFeature.feature.properties.cartodb_id;
+  }
+
+  useEffect(() => {
+    let newMapData = getMapData(geoJson, geoJsonCities);
+    const index = newMapData.features.findIndex(
+      (f) => f.properties.cartodb_id === featureId
+    );
+    if (index >= 0) {
+      const feature = newMapData.features[index];
+      const newFeature = mapFeature(feature, true);
+      newMapData = {
+        ...newMapData,
+        features: [
+          ...newMapData.features.slice(0, index),
+          newFeature,
+          ...newMapData.features.slice(index + 1),
+        ],
+      };
+    }
+    setMapData(newMapData);
+  }, [featureId, geoJson, geoJsonCities]);
+
+  return [mapData, setMapData];
+}
+
 function Tooltip({ data }) {
   const [leftPosition, setLeftPosition] = useState(false);
   const { t } = useTranslation();
@@ -153,20 +204,14 @@ function Map({ geoJson, confirmedByCity, provinces, provincesKeys }) {
   const dataLayer = useDataLayer(isProvinceActive);
   const isTablet = useMediaQuery(`(min-width: ${TABLET}px)`);
 
-  const mapData = {
-    ...geoJson,
-    features: [
-      ...geoJson.features,
-      ...(geoJsonCities ? geoJsonCities.features : []),
-    ],
-  };
-
-  const [viewport, setViewport] = useViewport(
-    geoJson.features,
+  const [hoveredFeature, setHoveredFeature] = useHoveredFeature(
     selectedProvince
   );
 
-  const [hoveredFeature, setHoveredFeature] = useHoveredFeature(
+  const [mapData] = useMapData(hoveredFeature, geoJson, geoJsonCities);
+
+  const [viewport, setViewport] = useViewport(
+    geoJson.features,
     selectedProvince
   );
 

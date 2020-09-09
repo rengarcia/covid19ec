@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-
 import createData from "../fetch/create-data";
 import Drawer from "../components/drawer";
 import DrawerStats from "../components/drawer-stats";
 import Header from "../components/header";
+import Logo from "../assets/info-circle.svg";
 import MapGeoJson from "../components/map-geojson";
 import stop from "../utils/stop";
 import { DESKTOP } from "../utils/breakpoints";
+import { initGA, logPageView } from "../utils/analytics";
 
 const Container = styled.main`
   box-sizing: border-box;
@@ -61,6 +62,14 @@ function Index({ ecuador, world }) {
     },
     world,
   };
+
+  useEffect(() => {
+    if (!window.GA_INITIALIZED) {
+      initGA();
+      window.GA_INITIALIZED = true;
+    }
+    logPageView();
+  }, []);
 
   return (
     <>

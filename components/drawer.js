@@ -3,9 +3,11 @@ import styled from "styled-components";
 import { rgba } from "polished";
 import {
   FaBiohazard,
+  FaBookDead,
   FaSkullCrossbones,
   FaNotesMedical,
   FaVial,
+  FaHandHoldingHeart,
 } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
@@ -72,15 +74,15 @@ export const Separator = styled.hr`
 const TableContainer = styled.section`
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 0.5rem;
-  overflow: hidden;
 
-  > div {
-    overflow-x: hidden;
-  }
-
-  header > div {
+  > div > header > div {
     font-weight: bold;
     text-transform: uppercase;
+  }
+
+  > div > header,
+  > div > div {
+    display: block;
   }
 
   [role="button"] {
@@ -89,14 +91,14 @@ const TableContainer = styled.section`
   }
 
   [role="row"] {
+    > div:first-of-type {
+      max-width: calc(100% - 8.375rem);
+    }
+
     > div:not(:first-of-type) {
       flex-grow: 0;
       min-width: 4rem;
       padding-left: 0;
-    }
-
-    > div:first-of-type {
-      max-width: calc(100% - 12rem);
     }
   }
 `;
@@ -186,7 +188,14 @@ function Table({ data }) {
 
 function Drawer({ data }) {
   const [{ selectedDataset }] = useGlobalState();
-  const { confirmed, deaths, labSamples, recovered } = data[selectedDataset];
+  const {
+    confirmed,
+    deaths,
+    labSamples,
+    recovered,
+    possibleDeaths,
+    epidemiologyDischarge,
+  } = data[selectedDataset];
   const { t } = useTranslation();
 
   return (
@@ -211,11 +220,23 @@ function Drawer({ data }) {
           value={recovered}
         />
         {selectedDataset === "ecuador" && (
-          <StatsBlock
-            icon={<FaVial aria-hidden="true" />}
-            label={t("labSamples")}
-            value={labSamples}
-          />
+          <>
+            <StatsBlock
+              icon={<FaHandHoldingHeart aria-hidden="true" />}
+              label={t("epidemiologyDischarge")}
+              value={epidemiologyDischarge}
+            />
+            <StatsBlock
+              icon={<FaBookDead aria-hidden="true" />}
+              label={t("possibleDeaths")}
+              value={possibleDeaths}
+            />
+            <StatsBlock
+              icon={<FaVial aria-hidden="true" />}
+              label={t("labSamples")}
+              value={labSamples}
+            />
+          </>
         )}
       </section>
       <Separator />

@@ -10,6 +10,6 @@ module.exports = withFonts(
     publicRuntimeConfig: {
       mapboxToken: process.env.MAPBOX_TOKEN,
       mapStyle: process.env.MAP_STYLE,
-    }
+    },
   })
 );

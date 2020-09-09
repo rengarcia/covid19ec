@@ -3,7 +3,7 @@ import fetch from "isomorphic-unfetch";
 import stop from "../utils/stop";
 
 const CITIES_URL =
-  "https://4ndresg17.carto.com:443/api/v2/sql?format=geojson&q=select * from public.cantonesf";
+  "https://4ndresg17.carto.com:443/api/v2/sql?format=geojson&q=select * from public.cantones_reshape";
 
 function updateCityFeature(feature, confirmedByCity) {
   const confirmed = confirmedByCity[feature.properties.dpa_canton] || 0;

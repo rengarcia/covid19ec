@@ -6,6 +6,7 @@ import ecuadorData from "./ecuador-data";
 import ecuadorDeathsProvinces from "./ecuador-deaths-provinces";
 import ecuadorPatients from "./ecuador-patients";
 import ecuadorSexCases from "./ecuador-sex-cases";
+import ecuadorSymptoms from "./ecuador-symptoms";
 import ecuadorTimeline from "./ecuador-timeline";
 import worldData from "./world-data";
 
@@ -17,7 +18,8 @@ const createEcuador = pipe(
   ecuadorTimeline,
   ecuadorPatients,
   ecuadorAgeGroup,
-  ecuadorSexCases
+  ecuadorSexCases,
+  ecuadorSymptoms
 );
 
 const createData = async () => {

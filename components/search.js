@@ -60,13 +60,13 @@ const ClearProvince = styled.span`
   display: grid;
   grid-template-columns: auto 1.125rem;
   grid-column-gap: 0.75rem;
-  left: 1.25rem;
+  left: 0.5rem;
   margin-left: auto;
   margin-right: auto;
   max-width: calc(100% - 4.75rem);
   padding: 0.25rem 0.75rem;
-  position: fixed;
-  top: 2.25rem;
+  position: absolute;
+  top: 0.375rem;
   transition: 250ms;
   z-index: 314160;
 
@@ -105,11 +105,6 @@ const ClearProvince = styled.span`
     css`
       display: none;
     `}
-
-  @media (min-width: ${DESKTOP}px) {
-    left: 1.5rem;
-    top: 2.5rem;
-  }
 `;
 
 function Search({ provincesKeys, onChange, value }) {
