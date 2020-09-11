@@ -8,7 +8,7 @@ const {
 const newSiteId = "covid19ec";
 
 export const initGA = () => {
-  console.log("GA init");
+  console.log("Google Analytics init");
   ReactGA.initialize(googleAnalyticsId);
 };
 
